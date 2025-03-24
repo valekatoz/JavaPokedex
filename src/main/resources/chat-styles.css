@@ -1,55 +1,66 @@
-/* chat-styles.css - Versione modernizzata */
+/* chat-styles.css - Versione a tema Pokémon */
 
 .chat-root {
-    -fx-background-color: #f8f9fa;
-    -fx-font-family: 'Segoe UI', 'SF Pro Display', system-ui, sans-serif;
+    -fx-background-color: #F0F0F0;
+    -fx-font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
+    -fx-background-image: url('/images/pokeball-pattern.png');
+    -fx-background-size: 80px;
+    -fx-background-opacity: 0.05;
 }
 
 .chat-header {
-    -fx-background-color: linear-gradient(to right, #5b6ead, #7579e7);
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 2);
+    -fx-background-color: linear-gradient(to right, #3A5D9F, #5D89CA);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
     -fx-padding: 16 20;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-color: #222224;
 }
 
 .professor-image {
     -fx-background-radius: 50%;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0, 0, 2);
+    -fx-border-radius: 50%;
+    -fx-border-color: white;
+    -fx-border-width: 3;
+}
+
+.mini-professor-image {
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);
     -fx-border-radius: 50%;
     -fx-border-color: white;
     -fx-border-width: 2;
 }
 
-.mini-professor-image {
-    -fx-background-radius: 50%;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 1);
-    -fx-border-radius: 50%;
-    -fx-border-color: white;
-    -fx-border-width: 1.5;
-}
-
 .messages-container {
-    -fx-background-color: #f0f2f5;
+    -fx-background-color: rgba(240, 242, 245, 0.7);
     -fx-background-radius: 12 12 0 0;
     -fx-padding: 16;
 }
 
-/* Bolle di messaggio migliorate */
+/* Bolle di messaggio in stile Pokémon */
 .user-message {
-    -fx-background-color: linear-gradient(to right, #3498db, #45aaf2);
+    -fx-background-color: linear-gradient(to right, #3A5D9F, #5D89CA);
     -fx-text-fill: white;
     -fx-background-radius: 18 4 18 18;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 4, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 2);
     -fx-padding: 12 16;
-    -fx-font-size: 13px;
+    -fx-font-size: 14px;
+    -fx-border-radius: 18 4 18 18;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
 }
 
 .assistant-message {
     -fx-background-color: white;
-    -fx-text-fill: #2d3436;
+    -fx-text-fill: #222224;
     -fx-background-radius: 4 18 18 18;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
     -fx-padding: 12 16;
-    -fx-font-size: 13px;
+    -fx-font-size: 14px;
+    -fx-border-radius: 4 18 18 18;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(0, 0, 0, 0.1);
 }
 
 .chat-scroll-pane {
@@ -59,64 +70,77 @@
 }
 
 .chat-scroll-pane > .viewport {
-    -fx-background-color: #f0f2f5;
+    -fx-background-color: rgba(240, 242, 245, 0.7);
 }
 
 .chat-scroll-pane > .scroll-bar {
-    -fx-background-color: transparent;
+    -fx-background-color: rgba(255, 255, 255, 0.6);
+    -fx-background-radius: 8;
+    -fx-padding: 2;
 }
 
 .chat-scroll-pane > .scroll-bar > .thumb {
-    -fx-background-color: rgba(142, 142, 147, 0.4);
+    -fx-background-color: #EE1515;
     -fx-background-radius: 8;
+    -fx-border-radius: 8;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(0, 0, 0, 0.2);
 }
 
 .chat-scroll-pane > .scroll-bar > .thumb:hover {
-    -fx-background-color: rgba(142, 142, 147, 0.7);
+    -fx-background-color: #FF3030;
 }
 
 .chat-input {
     -fx-background-radius: 24;
     -fx-padding: 12 18;
-    -fx-font-size: 13px;
+    -fx-font-size: 14px;
     -fx-background-color: white;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 1);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 1);
     -fx-prompt-text-fill: #95a5a6;
     -fx-transition: all 0.2s ease;
+    -fx-border-color: #3A5D9F;
+    -fx-border-width: 2;
+    -fx-border-radius: 24;
 }
 
 .chat-input:focused {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
     -fx-prompt-text-fill: #bdc3c7;
+    -fx-border-color: #FBD200;
 }
 
 .chat-display {
-    -fx-font-family: 'Segoe UI', 'SF Pro Display', system-ui, sans-serif;
+    -fx-font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
     -fx-font-size: 14px;
     -fx-background-color: transparent;
-    -fx-text-fill: #2d3436;
+    -fx-text-fill: #222224;
 }
 
 /* Stile per il pulsante di chat con il professore */
 .professor-chat-button {
-    -fx-background-color: linear-gradient(to right, #5b6ead, #7579e7);
+    -fx-background-color: linear-gradient(to right, #3A5D9F, #5D89CA);
     -fx-background-radius: 50%;
     -fx-padding: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 2);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
     -fx-transition: all 0.3s ease;
+    -fx-border-radius: 50%;
+    -fx-border-width: 3;
+    -fx-border-color: white;
 }
 
 .professor-chat-button:hover {
-    -fx-background-color: linear-gradient(to right, #4a5d9c, #6468d6);
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 12, 0, 0, 4);
+    -fx-background-color: linear-gradient(to right, #2A4D8F, #4A79BA);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0, 0, 4);
     -fx-cursor: hand;
-    -fx-rotate: 8;
+    -fx-rotate: 12;
+    -fx-border-color: #FBD200;
 }
 
 /* Animazione pulsante di chat migliorata */
 @keyframes float {
     0% { -fx-translate-y: 0; }
-    50% { -fx-translate-y: -5; }
+    50% { -fx-translate-y: -6; }
     100% { -fx-translate-y: 0; }
 }
 
@@ -126,33 +150,66 @@
 
 /* Stili per i bottoni delle funzionalità extra */
 .btn-info {
-    -fx-background-color: #0984e3;
+    -fx-background-color: #6493EB;
     -fx-text-fill: white;
-    -fx-background-radius: 24;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 1);
+    -fx-background-radius: 22;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
     -fx-transition: all 0.2s ease;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Trebuchet MS', sans-serif;
+    -fx-border-radius: 22;
+    -fx-border-width: 2;
+    -fx-border-color: #4A76D6;
 }
 
 .btn-success {
-    -fx-background-color: #00b894;
+    -fx-background-color: #7AC74C;
     -fx-text-fill: white;
-    -fx-background-radius: 24;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 1);
+    -fx-background-radius: 22;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
     -fx-transition: all 0.2s ease;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Trebuchet MS', sans-serif;
+    -fx-border-radius: 22;
+    -fx-border-width: 2;
+    -fx-border-color: #5AA32C;
 }
 
 .btn-warning {
-    -fx-background-color: #fdcb6e;
-    -fx-text-fill: #2d3436;
-    -fx-background-radius: 24;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 1);
+    -fx-background-color: #FBD200;
+    -fx-text-fill: #222224;
+    -fx-background-radius: 22;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
     -fx-transition: all 0.2s ease;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Trebuchet MS', sans-serif;
+    -fx-border-radius: 22;
+    -fx-border-width: 2;
+    -fx-border-color: #D5B100;
+}
+
+.btn-primary {
+    -fx-background-color: #3A5D9F;
+    -fx-text-fill: white;
+    -fx-background-radius: 22;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
+    -fx-transition: all 0.2s ease;
+    -fx-font-weight: bold;
+    -fx-font-family: 'Trebuchet MS', sans-serif;
+    -fx-border-radius: 22;
+    -fx-border-width: 2;
+    -fx-border-color: #1A3D7F;
 }
 
 .btn:hover {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
-    -fx-scale-x: 1.03;
-    -fx-scale-y: 1.03;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);
+    -fx-scale-x: 1.05;
+    -fx-scale-y: 1.05;
+}
+
+.btn:pressed {
+    -fx-scale-x: 0.95;
+    -fx-scale-y: 0.95;
 }
 
 /* Animazione per i messaggi migliorata */
@@ -178,7 +235,7 @@
 }
 
 .typing-indicator {
-    -fx-background-color: #e0e0e0;
+    -fx-background-color: #3A5D9F;
     -fx-background-radius: 50%;
     -fx-pref-width: 8;
     -fx-pref-height: 8;
@@ -193,21 +250,85 @@
     -fx-spacing: 4;
     -fx-alignment: center-left;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 3, 0, 0, 1);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-border-color: #5D89CA;
 }
 
-/* Aggiunta animazione al focus sui pulsanti */
-.btn:focused {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 3);
-    -fx-background-insets: -0.5;
-}
-
-/* Stile per badge circolari che potrebbero essere usati per notifiche */
+/* Badge circolari per notifiche */
 .badge {
-    -fx-background-color: #ff4757;
+    -fx-background-color: #EE1515;
     -fx-background-radius: 12;
     -fx-text-fill: white;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
     -fx-padding: 2 6;
     -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-border-color: white;
+}
+
+/* Stile per il pulsante di invio nella chat */
+.send-button {
+    -fx-background-color: #3A5D9F;
+    -fx-background-radius: 50%;
+    -fx-text-fill: white;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);
+    -fx-border-radius: 50%;
+    -fx-border-width: 2;
+    -fx-border-color: white;
+}
+
+.send-button:hover {
+    -fx-background-color: #4A6DB0;
+    -fx-border-color: #FBD200;
+}
+
+/* Effetti hover migliorati per i bottoni funzione */
+.btn-info:hover {
+    -fx-background-color: #5483D6;
+}
+
+.btn-success:hover {
+    -fx-background-color: #68B540;
+}
+
+.btn-warning:hover {
+    -fx-background-color: #FFC920;
+}
+
+.btn-primary:hover {
+    -fx-background-color: #4A6DB0;
+}
+
+/* Stile per le icone dei bottoni funzione */
+.button-icon {
+    -fx-fill: white;
+}
+
+.btn-warning .button-icon {
+    -fx-fill: #222224;
+}
+
+/* Effetto di brillantezza quando si riceve un nuovo messaggio */
+@keyframes glow {
+    0% { -fx-effect: dropshadow(gaussian, rgba(251, 210, 0, 0), 0, 0, 0, 0); }
+    50% { -fx-effect: dropshadow(gaussian, rgba(251, 210, 0, 0.7), 10, 0, 0, 0); }
+    100% { -fx-effect: dropshadow(gaussian, rgba(251, 210, 0, 0), 0, 0, 0, 0); }
+}
+
+.new-message {
+    -fx-animation: glow 1.5s ease-in-out;
+}
+
+/* Stile per l'area degli extra buttons con sfondo leggermente tematizzato */
+.extras-area {
+    -fx-background-color: rgba(58, 93, 159, 0.1);
+    -fx-background-radius: 12;
+    -fx-padding: 8;
+    -fx-border-radius: 12;
+    -fx-border-width: 1;
+    -fx-border-color: rgba(58, 93, 159, 0.2);
 }

@@ -106,6 +106,7 @@ public class PokedexApp extends Application {
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/chat-styles.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/pokemon-styles.css").toExternalForm());
 
         // Configura lo stage
         primaryStage.setTitle("Modern JavaFX Pokédex");

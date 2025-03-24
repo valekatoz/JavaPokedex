@@ -5,15 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d6e1247-3764-4326-8e8b-cc2befdb0d16" name="Changes" comment="Qualcosa">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/MusicManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/audio/track.wav" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/pokemon-styles.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/module-info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/module-info.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/chat-styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/chat-styles.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/images/professor.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/images/professor.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -58,11 +53,12 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/patri/Desktop/JavaPokedex/src/main/resources/audio"
+    "last_opened_file_path": "C:/Users/patri/Desktop/JavaPokedex/src/main/resources"
   }
 }]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\patri\Desktop\JavaPokedex\src\main\resources" />
       <recent name="C:\Users\patri\Desktop\JavaPokedex\src\main\resources\audio" />
       <recent name="C:\Users\patri\Desktop\JavaPokedex\src\main\resources\images" />
     </key>
