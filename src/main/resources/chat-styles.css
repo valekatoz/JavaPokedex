@@ -1,0 +1,107 @@
+/* chat-styles.css */
+
+.chat-root {
+    -fx-background-color: #f5f5f5;
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.chat-header {
+    -fx-background-color: #6C7A89;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 2);
+}
+
+.professor-image {
+    -fx-background-radius: 25;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 4, 0, 0, 2);
+}
+
+.mini-professor-image {
+    -fx-background-radius: 15;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0, 0, 1);
+}
+
+.messages-container {
+    -fx-background-color: #ECF0F1;
+}
+
+.user-message {
+    -fx-background-color: #3498DB;
+    -fx-text-fill: white;
+    -fx-background-radius: 18 0 18 18;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+.assistant-message {
+    -fx-background-color: white;
+    -fx-text-fill: #2C3E50;
+    -fx-background-radius: 0 18 18 18;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+}
+
+.chat-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+
+.chat-scroll-pane > .viewport {
+    -fx-background-color: #ECF0F1;
+}
+
+.chat-input {
+    -fx-background-radius: 20;
+    -fx-padding: 8 12;
+    -fx-prompt-text-fill: #95A5A6;
+}
+
+.chat-display {
+    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-size: 14px;
+}
+
+/* Stile per il pulsante di chat con il professore */
+.professor-chat-button {
+    -fx-background-color: #6C7A89;
+    -fx-background-radius: 30;
+    -fx-padding: 10;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);
+}
+
+.professor-chat-button:hover {
+    -fx-background-color: #86939E;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 8, 0, 0, 3);
+    -fx-cursor: hand;
+}
+
+/* Animazione pulsante di chat */
+@keyframes pulse {
+    0% { -fx-scale-x: 1; -fx-scale-y: 1; }
+    50% { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
+    100% { -fx-scale-x: 1; -fx-scale-y: 1; }
+}
+
+.professor-chat-button {
+    -fx-animation: pulse 2s infinite;
+}
+
+/* Stili per i bottoni delle funzionalità extra */
+.btn-info {
+    -fx-background-color: #3498DB;
+}
+
+.btn-success {
+    -fx-background-color: #2ECC71;
+}
+
+.btn-warning {
+    -fx-background-color: #F1C40F;
+}
+
+/* Animazione per i messaggi */
+@keyframes fadeIn {
+    0% { -fx-opacity: 0; }
+    100% { -fx-opacity: 1; }
+}
+
+.user-message, .assistant-message {
+    -fx-animation: fadeIn 0.3s;
+}
