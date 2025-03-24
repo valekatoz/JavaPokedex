@@ -31,6 +31,8 @@ public class PokedexApp extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        MusicManager musicManager = new MusicManager();
+        musicManager.play();
         this.primaryStage = primaryStage;
 
         // Inizializza il controller con cache e repository

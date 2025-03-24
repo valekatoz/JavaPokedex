@@ -4,6 +4,7 @@ module com.valekatoz.pokedex {
 
     requires org.kordamp.bootstrapfx.core;
     requires org.json;
+    requires java.desktop;
 
     opens com.pokedex to javafx.fxml;
     exports com.pokedex;

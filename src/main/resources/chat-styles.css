@@ -1,107 +1,213 @@
-/* chat-styles.css */
+/* chat-styles.css - Versione modernizzata */
 
 .chat-root {
-    -fx-background-color: #f5f5f5;
-    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-background-color: #f8f9fa;
+    -fx-font-family: 'Segoe UI', 'SF Pro Display', system-ui, sans-serif;
 }
 
 .chat-header {
-    -fx-background-color: #6C7A89;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 4, 0, 0, 2);
+    -fx-background-color: linear-gradient(to right, #5b6ead, #7579e7);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 8, 0, 0, 2);
+    -fx-padding: 16 20;
 }
 
 .professor-image {
-    -fx-background-radius: 25;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 4, 0, 0, 2);
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
+    -fx-border-radius: 50%;
+    -fx-border-color: white;
+    -fx-border-width: 2;
 }
 
 .mini-professor-image {
-    -fx-background-radius: 15;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.2), 3, 0, 0, 1);
+    -fx-background-radius: 50%;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 1);
+    -fx-border-radius: 50%;
+    -fx-border-color: white;
+    -fx-border-width: 1.5;
 }
 
 .messages-container {
-    -fx-background-color: #ECF0F1;
+    -fx-background-color: #f0f2f5;
+    -fx-background-radius: 12 12 0 0;
+    -fx-padding: 16;
 }
 
+/* Bolle di messaggio migliorate */
 .user-message {
-    -fx-background-color: #3498DB;
+    -fx-background-color: linear-gradient(to right, #3498db, #45aaf2);
     -fx-text-fill: white;
-    -fx-background-radius: 18 0 18 18;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+    -fx-background-radius: 18 4 18 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 4, 0, 0, 1);
+    -fx-padding: 12 16;
+    -fx-font-size: 13px;
 }
 
 .assistant-message {
     -fx-background-color: white;
-    -fx-text-fill: #2C3E50;
-    -fx-background-radius: 0 18 18 18;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 3, 0, 0, 1);
+    -fx-text-fill: #2d3436;
+    -fx-background-radius: 4 18 18 18;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 4, 0, 0, 1);
+    -fx-padding: 12 16;
+    -fx-font-size: 13px;
 }
 
 .chat-scroll-pane {
     -fx-background-color: transparent;
     -fx-border-color: transparent;
+    -fx-padding: 0;
 }
 
 .chat-scroll-pane > .viewport {
-    -fx-background-color: #ECF0F1;
+    -fx-background-color: #f0f2f5;
+}
+
+.chat-scroll-pane > .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.chat-scroll-pane > .scroll-bar > .thumb {
+    -fx-background-color: rgba(142, 142, 147, 0.4);
+    -fx-background-radius: 8;
+}
+
+.chat-scroll-pane > .scroll-bar > .thumb:hover {
+    -fx-background-color: rgba(142, 142, 147, 0.7);
 }
 
 .chat-input {
-    -fx-background-radius: 20;
-    -fx-padding: 8 12;
-    -fx-prompt-text-fill: #95A5A6;
+    -fx-background-radius: 24;
+    -fx-padding: 12 18;
+    -fx-font-size: 13px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 6, 0, 0, 1);
+    -fx-prompt-text-fill: #95a5a6;
+    -fx-transition: all 0.2s ease;
+}
+
+.chat-input:focused {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 8, 0, 0, 2);
+    -fx-prompt-text-fill: #bdc3c7;
 }
 
 .chat-display {
-    -fx-font-family: 'Segoe UI', Arial, sans-serif;
+    -fx-font-family: 'Segoe UI', 'SF Pro Display', system-ui, sans-serif;
     -fx-font-size: 14px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #2d3436;
 }
 
 /* Stile per il pulsante di chat con il professore */
 .professor-chat-button {
-    -fx-background-color: #6C7A89;
-    -fx-background-radius: 30;
-    -fx-padding: 10;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.3), 5, 0, 0, 2);
+    -fx-background-color: linear-gradient(to right, #5b6ead, #7579e7);
+    -fx-background-radius: 50%;
+    -fx-padding: 12;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 8, 0, 0, 2);
+    -fx-transition: all 0.3s ease;
 }
 
 .professor-chat-button:hover {
-    -fx-background-color: #86939E;
-    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.4), 8, 0, 0, 3);
+    -fx-background-color: linear-gradient(to right, #4a5d9c, #6468d6);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 12, 0, 0, 4);
     -fx-cursor: hand;
+    -fx-rotate: 8;
 }
 
-/* Animazione pulsante di chat */
-@keyframes pulse {
-    0% { -fx-scale-x: 1; -fx-scale-y: 1; }
-    50% { -fx-scale-x: 1.05; -fx-scale-y: 1.05; }
-    100% { -fx-scale-x: 1; -fx-scale-y: 1; }
+/* Animazione pulsante di chat migliorata */
+@keyframes float {
+    0% { -fx-translate-y: 0; }
+    50% { -fx-translate-y: -5; }
+    100% { -fx-translate-y: 0; }
 }
 
 .professor-chat-button {
-    -fx-animation: pulse 2s infinite;
+    -fx-animation: float 3s infinite ease-in-out;
 }
 
 /* Stili per i bottoni delle funzionalità extra */
 .btn-info {
-    -fx-background-color: #3498DB;
+    -fx-background-color: #0984e3;
+    -fx-text-fill: white;
+    -fx-background-radius: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 1);
+    -fx-transition: all 0.2s ease;
 }
 
 .btn-success {
-    -fx-background-color: #2ECC71;
+    -fx-background-color: #00b894;
+    -fx-text-fill: white;
+    -fx-background-radius: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 1);
+    -fx-transition: all 0.2s ease;
 }
 
 .btn-warning {
-    -fx-background-color: #F1C40F;
+    -fx-background-color: #fdcb6e;
+    -fx-text-fill: #2d3436;
+    -fx-background-radius: 24;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 1);
+    -fx-transition: all 0.2s ease;
 }
 
-/* Animazione per i messaggi */
-@keyframes fadeIn {
-    0% { -fx-opacity: 0; }
-    100% { -fx-opacity: 1; }
+.btn:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
 }
 
-.user-message, .assistant-message {
-    -fx-animation: fadeIn 0.3s;
+/* Animazione per i messaggi migliorata */
+@keyframes slideIn {
+    0% { -fx-translate-y: 10; -fx-opacity: 0; }
+    100% { -fx-translate-y: 0; -fx-opacity: 1; }
+}
+
+.user-message {
+    -fx-animation: slideIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.assistant-message {
+    -fx-animation: slideIn 0.3s 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
+    -fx-animation-fill-mode: both;
+}
+
+/* Animazione di digitazione per il professore */
+@keyframes typingIndicator {
+    0% { -fx-opacity: 0.4; }
+    50% { -fx-opacity: 1; }
+    100% { -fx-opacity: 0.4; }
+}
+
+.typing-indicator {
+    -fx-background-color: #e0e0e0;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 8;
+    -fx-pref-height: 8;
+    -fx-margin: 0 1;
+    -fx-animation: typingIndicator 1s infinite;
+}
+
+.typing-indicator-container {
+    -fx-background-color: white;
+    -fx-background-radius: 12;
+    -fx-padding: 8 12;
+    -fx-spacing: 4;
+    -fx-alignment: center-left;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 3, 0, 0, 1);
+}
+
+/* Aggiunta animazione al focus sui pulsanti */
+.btn:focused {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 10, 0, 0, 3);
+    -fx-background-insets: -0.5;
+}
+
+/* Stile per badge circolari che potrebbero essere usati per notifiche */
+.badge {
+    -fx-background-color: #ff4757;
+    -fx-background-radius: 12;
+    -fx-text-fill: white;
+    -fx-font-size: 11px;
+    -fx-font-weight: bold;
+    -fx-padding: 2 6;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
 }
