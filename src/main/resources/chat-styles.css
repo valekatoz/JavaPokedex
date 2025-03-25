@@ -1,334 +1,261 @@
-/* chat-styles.css - Versione a tema Pokémon */
+/* Updated Pokemon-styles.css - To match the reference image */
 
-.chat-root {
-    -fx-background-color: #F0F0F0;
-    -fx-font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
-    -fx-background-image: url('/images/pokeball-pattern.png');
-    -fx-background-size: 80px;
+/* Base styling */
+.root {
+    -fx-background-color: #F5F5F5;
+    -fx-font-family: 'Segoe UI', 'SF Pro Display', system-ui, sans-serif;
+    -fx-background-image: url('/images/dot-pattern.png');
+    -fx-background-size: 20px;
     -fx-background-opacity: 0.05;
 }
 
-.chat-header {
-    -fx-background-color: linear-gradient(to right, #3A5D9F, #5D89CA);
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
-    -fx-padding: 16 20;
-    -fx-border-width: 0 0 3 0;
-    -fx-border-color: #222224;
-}
-
-.professor-image {
-    -fx-background-radius: 50%;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.25), 6, 0, 0, 2);
-    -fx-border-radius: 50%;
-    -fx-border-color: white;
-    -fx-border-width: 3;
-}
-
-.mini-professor-image {
-    -fx-background-radius: 50%;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);
-    -fx-border-radius: 50%;
-    -fx-border-color: white;
-    -fx-border-width: 2;
-}
-
-.messages-container {
-    -fx-background-color: rgba(240, 242, 245, 0.7);
-    -fx-background-radius: 12 12 0 0;
-    -fx-padding: 16;
-}
-
-/* Bolle di messaggio in stile Pokémon */
-.user-message {
-    -fx-background-color: linear-gradient(to right, #3A5D9F, #5D89CA);
-    -fx-text-fill: white;
-    -fx-background-radius: 18 4 18 18;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 4, 0, 0, 2);
-    -fx-padding: 12 16;
-    -fx-font-size: 14px;
-    -fx-border-radius: 18 4 18 18;
-    -fx-border-width: 1;
-    -fx-border-color: rgba(0, 0, 0, 0.1);
-}
-
-.assistant-message {
+/* Header with Pokédex styling */
+.header {
     -fx-background-color: white;
-    -fx-text-fill: #222224;
-    -fx-background-radius: 4 18 18 18;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 4, 0, 0, 1);
-    -fx-padding: 12 16;
-    -fx-font-size: 14px;
-    -fx-border-radius: 4 18 18 18;
-    -fx-border-width: 1;
-    -fx-border-color: rgba(0, 0, 0, 0.1);
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+    -fx-padding: 15 20;
+    -fx-border-width: 0 0 1 0;
+    -fx-border-color: #EEEEEE;
 }
 
-.chat-scroll-pane {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-padding: 0;
-}
-
-.chat-scroll-pane > .viewport {
-    -fx-background-color: rgba(240, 242, 245, 0.7);
-}
-
-.chat-scroll-pane > .scroll-bar {
-    -fx-background-color: rgba(255, 255, 255, 0.6);
-    -fx-background-radius: 8;
-    -fx-padding: 2;
-}
-
-.chat-scroll-pane > .scroll-bar > .thumb {
-    -fx-background-color: #EE1515;
-    -fx-background-radius: 8;
-    -fx-border-radius: 8;
-    -fx-border-width: 1;
-    -fx-border-color: rgba(0, 0, 0, 0.2);
-}
-
-.chat-scroll-pane > .scroll-bar > .thumb:hover {
-    -fx-background-color: #FF3030;
-}
-
-.chat-input {
-    -fx-background-radius: 24;
-    -fx-padding: 12 18;
-    -fx-font-size: 14px;
-    -fx-background-color: white;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 6, 0, 0, 1);
-    -fx-prompt-text-fill: #95a5a6;
-    -fx-transition: all 0.2s ease;
-    -fx-border-color: #3A5D9F;
-    -fx-border-width: 2;
-    -fx-border-radius: 24;
-}
-
-.chat-input:focused {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 8, 0, 0, 2);
-    -fx-prompt-text-fill: #bdc3c7;
-    -fx-border-color: #FBD200;
-}
-
-.chat-display {
-    -fx-font-family: 'Trebuchet MS', 'Segoe UI', system-ui, sans-serif;
-    -fx-font-size: 14px;
-    -fx-background-color: transparent;
-    -fx-text-fill: #222224;
-}
-
-/* Stile per il pulsante di chat con il professore */
-.professor-chat-button {
-    -fx-background-color: linear-gradient(to right, #3A5D9F, #5D89CA);
-    -fx-background-radius: 50%;
-    -fx-padding: 12;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 2);
-    -fx-transition: all 0.3s ease;
-    -fx-border-radius: 50%;
-    -fx-border-width: 3;
-    -fx-border-color: white;
-}
-
-.professor-chat-button:hover {
-    -fx-background-color: linear-gradient(to right, #2A4D8F, #4A79BA);
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.4), 12, 0, 0, 4);
+/* Pokédex title */
+.clickable-title {
     -fx-cursor: hand;
-    -fx-rotate: 12;
-    -fx-border-color: #FBD200;
-}
-
-/* Animazione pulsante di chat migliorata */
-@keyframes float {
-    0% { -fx-translate-y: 0; }
-    50% { -fx-translate-y: -6; }
-    100% { -fx-translate-y: 0; }
-}
-
-.professor-chat-button {
-    -fx-animation: float 3s infinite ease-in-out;
-}
-
-/* Stili per i bottoni delle funzionalità extra */
-.btn-info {
-    -fx-background-color: #6493EB;
-    -fx-text-fill: white;
-    -fx-background-radius: 22;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
-    -fx-transition: all 0.2s ease;
+    -fx-font-size: 24px;
     -fx-font-weight: bold;
-    -fx-font-family: 'Trebuchet MS', sans-serif;
-    -fx-border-radius: 22;
-    -fx-border-width: 2;
-    -fx-border-color: #4A76D6;
-}
-
-.btn-success {
-    -fx-background-color: #7AC74C;
-    -fx-text-fill: white;
-    -fx-background-radius: 22;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
+    -fx-text-fill: #444444;
     -fx-transition: all 0.2s ease;
+}
+
+.clickable-title:hover {
+    -fx-scale-x: 1.02;
+    -fx-scale-y: 1.02;
+    -fx-text-fill: #FF5252;
+}
+
+/* Generation selector */
+.gen-selector {
+    -fx-padding: 10 0 15 0;
+    -fx-alignment: center;
+    -fx-spacing: 10;
+}
+
+.gen-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #757575;
+    -fx-font-size: 14px;
+    -fx-padding: 5 15;
+    -fx-cursor: hand;
+    -fx-border-width: 0 0 3 0;
+    -fx-border-color: transparent;
+}
+
+.gen-button:hover {
+    -fx-text-fill: #444444;
+}
+
+.gen-button.active {
+    -fx-text-fill: #444444;
     -fx-font-weight: bold;
-    -fx-font-family: 'Trebuchet MS', sans-serif;
-    -fx-border-radius: 22;
-    -fx-border-width: 2;
-    -fx-border-color: #5AA32C;
+    -fx-border-color: #3A5D9F;
 }
 
-.btn-warning {
-    -fx-background-color: #FBD200;
-    -fx-text-fill: #222224;
-    -fx-background-radius: 22;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
-    -fx-transition: all 0.2s ease;
-    -fx-font-weight: bold;
-    -fx-font-family: 'Trebuchet MS', sans-serif;
-    -fx-border-radius: 22;
-    -fx-border-width: 2;
-    -fx-border-color: #D5B100;
+/* Search field */
+.search-field {
+    -fx-background-radius: 20;
+    -fx-padding: 8 15;
+    -fx-pref-width: 200;
+    -fx-font-size: 13px;
+    -fx-background-color: #F0F0F0;
+    -fx-prompt-text-fill: #757575;
+    -fx-transition: all 0.3s ease;
 }
 
-.btn-primary {
-    -fx-background-color: #3A5D9F;
-    -fx-text-fill: white;
-    -fx-background-radius: 22;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 6, 0, 0, 2);
-    -fx-transition: all 0.2s ease;
-    -fx-font-weight: bold;
-    -fx-font-family: 'Trebuchet MS', sans-serif;
-    -fx-border-radius: 22;
-    -fx-border-width: 2;
-    -fx-border-color: #1A3D7F;
-}
-
-.btn:hover {
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.3), 8, 0, 0, 3);
-    -fx-scale-x: 1.05;
-    -fx-scale-y: 1.05;
-}
-
-.btn:pressed {
-    -fx-scale-x: 0.95;
-    -fx-scale-y: 0.95;
-}
-
-/* Animazione per i messaggi migliorata */
-@keyframes slideIn {
-    0% { -fx-translate-y: 10; -fx-opacity: 0; }
-    100% { -fx-translate-y: 0; -fx-opacity: 1; }
-}
-
-.user-message {
-    -fx-animation: slideIn 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
-.assistant-message {
-    -fx-animation: slideIn 0.3s 0.1s cubic-bezier(0.25, 0.8, 0.25, 1);
-    -fx-animation-fill-mode: both;
-}
-
-/* Animazione di digitazione per il professore */
-@keyframes typingIndicator {
-    0% { -fx-opacity: 0.4; }
-    50% { -fx-opacity: 1; }
-    100% { -fx-opacity: 0.4; }
-}
-
-.typing-indicator {
-    -fx-background-color: #3A5D9F;
-    -fx-background-radius: 50%;
-    -fx-pref-width: 8;
-    -fx-pref-height: 8;
-    -fx-margin: 0 1;
-    -fx-animation: typingIndicator 1s infinite;
-}
-
-.typing-indicator-container {
+.search-field:focused {
     -fx-background-color: white;
-    -fx-background-radius: 12;
-    -fx-padding: 8 12;
-    -fx-spacing: 4;
-    -fx-alignment: center-left;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 3, 0, 0, 1);
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
-    -fx-border-color: #5D89CA;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 5, 0, 0, 1);
+    -fx-prompt-text-fill: #AAAAAA;
 }
 
-/* Badge circolari per notifiche */
-.badge {
-    -fx-background-color: #EE1515;
+/* Pokémon cards */
+.pokemon-card {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 3, 0, 0, 1);
+    -fx-border-radius: 20;
+    -fx-min-width: 160;
+    -fx-max-width: 160;
+    -fx-transition: all 0.3s ease;
+    -fx-padding: 10;
+    -fx-alignment: center;
+}
+
+/* Type-specific background colors for the cards */
+.pokemon-card.grass {
+    -fx-background-color: #F1FFEB;
+    -fx-border-width: 1;
+    -fx-border-color: #70ED57;
+}
+
+.pokemon-card.fire {
+    -fx-background-color: #FFF1F0;
+    -fx-border-width: 1;
+    -fx-border-color: #FF6B70;
+}
+
+.pokemon-card.water {
+    -fx-background-color: #F0F9FF;
+    -fx-border-width: 1;
+    -fx-border-color: #5DA0FF;
+}
+
+.pokemon-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.12), 6, 0, 0, 3);
+    -fx-scale-x: 1.03;
+    -fx-scale-y: 1.03;
+}
+
+.pokemon-number {
+    -fx-font-size: 12px;
+    -fx-text-fill: #AAAAAA;
+    -fx-padding: 0 0 5 0;
+    -fx-alignment: center-right;
+    -fx-font-weight: bold;
+}
+
+.pokemon-name {
+    -fx-font-weight: bold;
+    -fx-font-size: 16px;
+    -fx-text-fill: #444444;
+    -fx-padding: 5 0;
+    -fx-alignment: center;
+}
+
+/* Type label badges */
+.type-label {
+    -fx-padding: 3 8;
     -fx-background-radius: 12;
     -fx-text-fill: white;
     -fx-font-size: 11px;
     -fx-font-weight: bold;
-    -fx-padding: 2 6;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 3, 0, 0, 1);
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
-    -fx-border-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 1, 0, 0, 1);
 }
 
-/* Stile per il pulsante di invio nella chat */
-.send-button {
-    -fx-background-color: #3A5D9F;
-    -fx-background-radius: 50%;
-    -fx-text-fill: white;
+.type-box {
+    -fx-spacing: 5;
+    -fx-padding: 5 0;
+    -fx-alignment: center;
+}
+
+/* Type-specific colors */
+.type-grass {
+    -fx-background-color: #78C850;
+}
+
+.type-poison {
+    -fx-background-color: #A040A0;
+}
+
+.type-fire {
+    -fx-background-color: #F08030;
+}
+
+.type-flying {
+    -fx-background-color: #A890F0;
+}
+
+.type-water {
+    -fx-background-color: #6890F0;
+}
+
+/* Detail view */
+.detail-view {
+    -fx-background-color: white;
+    -fx-background-radius: 10;
+    -fx-padding: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.1), 5, 0, 0, 2);
+}
+
+/* Placeholder styling */
+.placeholder {
+    -fx-background-color: white;
+    -fx-background-radius: 20;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 3, 0, 0, 1);
+    -fx-min-width: 160;
+    -fx-max-width: 160;
     -fx-padding: 10;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.2), 4, 0, 0, 1);
-    -fx-border-radius: 50%;
-    -fx-border-width: 2;
-    -fx-border-color: white;
 }
 
-.send-button:hover {
-    -fx-background-color: #4A6DB0;
-    -fx-border-color: #FBD200;
+.placeholder-image {
+    -fx-background-color: #F0F0F0;
+    -fx-background-radius: 50%;
+    -fx-pref-width: 120;
+    -fx-pref-height: 120;
 }
 
-/* Effetti hover migliorati per i bottoni funzione */
-.btn-info:hover {
-    -fx-background-color: #5483D6;
+/* Button styling */
+.btn {
+    -fx-background-radius: 20;
+    -fx-font-weight: normal;
+    -fx-font-size: 13px;
+    -fx-padding: 6 12;
+    -fx-transition: all 0.2s ease;
+    -fx-cursor: hand;
 }
 
-.btn-success:hover {
-    -fx-background-color: #68B540;
+.btn-light {
+    -fx-background-color: #F5F5F5;
+    -fx-text-fill: #444444;
 }
 
-.btn-warning:hover {
-    -fx-background-color: #FFC920;
+.btn-info {
+    -fx-background-color: #5DA0FF;
+    -fx-text-fill: white;
 }
 
-.btn-primary:hover {
-    -fx-background-color: #4A6DB0;
+.btn-success {
+    -fx-background-color: #70ED57;
+    -fx-text-fill: white;
 }
 
-/* Stile per le icone dei bottoni funzione */
-.button-icon {
-    -fx-fill: white;
+.btn-danger {
+    -fx-background-color: #FF6B70;
+    -fx-text-fill: white;
 }
 
-.btn-warning .button-icon {
-    -fx-fill: #222224;
+/* Back button */
+.btn-back {
+    -fx-background-color: #F5F5F5;
+    -fx-text-fill: #444444;
+    -fx-background-radius: 20;
+    -fx-border-radius: 20;
+    -fx-border-width: 0;
 }
 
-/* Effetto di brillantezza quando si riceve un nuovo messaggio */
-@keyframes glow {
-    0% { -fx-effect: dropshadow(gaussian, rgba(251, 210, 0, 0), 0, 0, 0, 0); }
-    50% { -fx-effect: dropshadow(gaussian, rgba(251, 210, 0, 0.7), 10, 0, 0, 0); }
-    100% { -fx-effect: dropshadow(gaussian, rgba(251, 210, 0, 0), 0, 0, 0, 0); }
+.btn-back:hover {
+    -fx-background-color: #EEEEEE;
 }
 
-.new-message {
-    -fx-animation: glow 1.5s ease-in-out;
+/* ScrollPane customization */
+.scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 10;
 }
 
-/* Stile per l'area degli extra buttons con sfondo leggermente tematizzato */
-.extras-area {
-    -fx-background-color: rgba(58, 93, 159, 0.1);
-    -fx-background-radius: 12;
-    -fx-padding: 8;
-    -fx-border-radius: 12;
-    -fx-border-width: 1;
-    -fx-border-color: rgba(58, 93, 159, 0.2);
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-pane > .scroll-bar > .thumb {
+    -fx-background-color: #DDDDDD;
+    -fx-background-radius: 10;
+}
+
+.scroll-pane > .scroll-bar > .thumb:hover {
+    -fx-background-color: #BBBBBB;
 }

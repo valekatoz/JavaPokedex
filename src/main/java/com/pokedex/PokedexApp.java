@@ -8,14 +8,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.text.Font;
-import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
+/**
+ * Applicazione Pokédex con UI migliorata
+ */
 public class PokedexApp extends Application {
 
     private final int BATCH_SIZE = 30;
@@ -28,6 +29,8 @@ public class PokedexApp extends Application {
     private ScrollPane scrollPane;
     private boolean isSearchMode = false;
     private ProfessorAssistant professorAssistant;
+    private GenerationSelector generationSelector;
+    private TextField searchField;
 
     @Override
     public void start(Stage primaryStage) {
@@ -51,11 +54,15 @@ public class PokedexApp extends Application {
         HBox header = createHeader();
         root.setTop(header);
 
+        // Selettore generazioni
+        generationSelector = new GenerationSelector(this::filterByGeneration);
+        HBox genSelectorContainer = UIFactory.createGenerationSelector(generationSelector);
+
         // Griglia Pokemon con scroll pane
         pokemonGrid = new FlowPane();
-        pokemonGrid.setHgap(15);
-        pokemonGrid.setVgap(15);
-        pokemonGrid.setPadding(new Insets(15));
+        pokemonGrid.setHgap(20);
+        pokemonGrid.setVgap(20);
+        pokemonGrid.setPadding(new Insets(20));
         pokemonGrid.setPrefWidth(800);
 
         scrollPane = new ScrollPane(pokemonGrid);
@@ -73,9 +80,9 @@ public class PokedexApp extends Application {
             }
         });
 
-        VBox contentArea = new VBox(10);
-        contentArea.getChildren().addAll(scrollPane);
-        contentArea.setPadding(new Insets(10));
+        VBox contentArea = new VBox(5);
+        contentArea.getChildren().addAll(genSelectorContainer, scrollPane);
+        contentArea.setPadding(new Insets(0, 10, 10, 10));
 
         root.setCenter(contentArea);
 
@@ -100,16 +107,16 @@ public class PokedexApp extends Application {
         overlayPane.getChildren().add(professorButton);
 
         // Crea la scena
-        Scene scene = new Scene(overlayPane, 800, 600);
+        Scene scene = new Scene(overlayPane, 850, 650);
 
         // Aggiungi CSS con il metodo corretto per BootstrapFX
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
-        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
-        scene.getStylesheets().add(getClass().getResource("/chat-styles.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/pokemon-styles.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/chat-styles.css").toExternalForm());
+        scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
         // Configura lo stage
-        primaryStage.setTitle("Modern JavaFX Pokédex");
+        primaryStage.setTitle("Modern Pokédex");
         primaryStage.setScene(scene);
         primaryStage.show();
 
@@ -118,51 +125,28 @@ public class PokedexApp extends Application {
     }
 
     private HBox createHeader() {
-        HBox header = new HBox();
-        header.setPadding(new Insets(15));
-        header.setSpacing(10);
-        header.setAlignment(Pos.CENTER_LEFT);
-        header.getStyleClass().add("header");
-
-        // Titolo Pokédex (a sinistra)
-        Label title = new Label("Pokédex");
-        title.setFont(Font.font("System", FontWeight.BOLD, 24));
-        title.setTextFill(Color.WHITE);
-        title.setOnMouseClicked(e -> resetAndShowAllPokemon());
-        title.getStyleClass().add("clickable-title");
-
-        // Primo spacer per posizionare il pulsante al centro
-        Region spacer1 = new Region();
-        HBox.setHgrow(spacer1, Priority.ALWAYS);
-
-        // Pulsante "Torna al Pokédex" (in mezzo)
         backButton = new Button("Torna al Pokédex");
-        backButton.getStyleClass().addAll("btn", "btn-light");
         backButton.setVisible(false); // Inizialmente nascosto
         backButton.setOnAction(e -> resetAndShowAllPokemon());
 
-        // Secondo spacer per posizionare la ricerca a destra
-        Region spacer2 = new Region();
-        HBox.setHgrow(spacer2, Priority.ALWAYS);
+        HBox header = UIFactory.createImprovedHeader(backButton);
 
-        // Area di ricerca (a destra)
-        HBox searchArea = new HBox(5);
-        searchArea.setAlignment(Pos.CENTER_RIGHT);
+        // Aggiungi funzionalità di ricerca
+        searchField = (TextField) header.getChildren().stream()
+                .filter(node -> node instanceof HBox)
+                .flatMap(hbox -> ((HBox) hbox).getChildren().stream())
+                .filter(node -> node instanceof TextField)
+                .findFirst()
+                .orElse(new TextField());
 
-        TextField searchField = new TextField();
-        searchField.setPromptText("Cerca Pokémon");
-        searchField.getStyleClass().add("search-field");
+        Button searchButton = (Button) header.getChildren().stream()
+                .filter(node -> node instanceof HBox)
+                .flatMap(hbox -> ((HBox) hbox).getChildren().stream())
+                .filter(node -> node instanceof Button && ((Button) node).getText().equals("Cerca"))
+                .findFirst()
+                .orElse(new Button("Cerca"));
 
-        Button searchButton = new Button("Cerca");
-        searchButton.getStyleClass().addAll("btn", "btn-success");
         searchButton.setOnAction(e -> performSearch(searchField.getText()));
-
-        // Aggiungi funzionalità di ricerca all'evento Enter sulla casella di testo
-        searchField.setOnAction(e -> searchButton.fire());
-
-        searchArea.getChildren().addAll(searchField, searchButton);
-
-        header.getChildren().addAll(title, spacer1, backButton, spacer2, searchArea);
 
         return header;
     }
@@ -195,17 +179,17 @@ public class PokedexApp extends Application {
                     // Rimuovi i placeholders
                     pokemonGrid.getChildren().removeIf(node -> node.getStyleClass().contains("placeholder"));
 
+                    // Filtra per generazione selezionata
+                    List<Pokemon> filteredList = pokemonList.stream()
+                            .filter(pokemon -> generationSelector.isInSelectedGeneration(pokemon.getId()))
+                            .collect(Collectors.toList());
+
                     // Aggiungi le card con i dati reali
-                    for (Pokemon pokemon : pokemonList) {
+                    for (Pokemon pokemon : filteredList) {
                         VBox pokemonCard = UIFactory.createPokemonCard(pokemon);
 
-                        // Aggiungi un pulsante per visualizzare i dettagli del Pokémon
-                        Button detailsButton = new Button("Dettagli");
-                        detailsButton.getStyleClass().addAll("btn", "btn-info", "btn-sm");
-                        detailsButton.setOnAction(e -> showPokemonDetails(pokemon));
-
-                        // Aggiungi il pulsante alla card
-                        ((VBox) pokemonCard).getChildren().add(detailsButton);
+                        // Aggiungi un listener per visualizzare i dettagli del Pokémon
+                        pokemonCard.setOnMouseClicked(e -> showPokemonDetails(pokemon));
 
                         pokemonGrid.getChildren().add(pokemonCard);
                     }
@@ -223,21 +207,11 @@ public class PokedexApp extends Application {
         pokemonGrid.getChildren().clear();
 
         if (results.isEmpty()) {
-            Label noResults = new Label("Nessun risultato trovato");
-            noResults.getStyleClass().add("no-results");
-            pokemonGrid.getChildren().add(noResults);
+            pokemonGrid.getChildren().add(UIFactory.createNoResultsMessage());
         } else {
             for (Pokemon pokemon : results) {
                 VBox pokemonCard = UIFactory.createPokemonCard(pokemon);
-
-                // Aggiungi un pulsante per visualizzare i dettagli del Pokémon
-                Button detailsButton = new Button("Dettagli");
-                detailsButton.getStyleClass().addAll("btn", "btn-info", "btn-sm");
-                detailsButton.setOnAction(e -> showPokemonDetails(pokemon));
-
-                // Aggiungi il pulsante alla card
-                ((VBox) pokemonCard).getChildren().add(detailsButton);
-
+                pokemonCard.setOnMouseClicked(e -> showPokemonDetails(pokemon));
                 pokemonGrid.getChildren().add(pokemonCard);
             }
         }
@@ -263,6 +237,16 @@ public class PokedexApp extends Application {
         loadMorePokemon();
     }
 
+    private void filterByGeneration(int generation) {
+        // Solo se non siamo in modalità ricerca
+        if (!isSearchMode) {
+            pokemonGrid.getChildren().clear();
+            controller.resetOffset();
+            scrollPane.setVvalue(0);
+            loadMorePokemon();
+        }
+    }
+
     private void showPokemonDetails(Pokemon basicPokemon) {
         // Crea una nuova finestra per i dettagli
         Stage detailStage = new Stage();
@@ -279,17 +263,18 @@ public class PokedexApp extends Application {
         detailRoot.setCenter(loadingBox);
 
         // Mostra la finestra con l'indicatore di caricamento
-        Scene detailScene = new Scene(detailRoot, 600, 500);
+        Scene detailScene = new Scene(detailRoot, 700, 700);
         detailScene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
-        detailScene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
+        detailScene.getStylesheets().add(getClass().getResource("/pokemon-styles.css").toExternalForm());
+        detailScene.getStylesheets().add(getClass().getResource("/pokemon-detail.css").toExternalForm());
         detailStage.setScene(detailScene);
         detailStage.show();
 
         // Carica i dettagli completi
         controller.loadPokemonDetails(basicPokemon.getId(),
                 detailedPokemon -> {
-                    // Crea la visualizzazione dettagliata
-                    ScrollPane detailView = UIFactory.createPokemonDetailView(detailedPokemon, () -> detailStage.close());
+                    // Crea la visualizzazione dettagliata con il nuovo design
+                    ScrollPane detailView = DetailViewFactory.createDetailView(detailedPokemon, () -> detailStage.close());
                     detailRoot.setCenter(detailView);
                 },
                 error -> {
