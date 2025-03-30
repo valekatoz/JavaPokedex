@@ -7,7 +7,8 @@
     <list default="true" id="2d6e1247-3764-4326-8e8b-cc2befdb0d16" name="Changes" comment="Qualcosa">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/MusicManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/MusicManager.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

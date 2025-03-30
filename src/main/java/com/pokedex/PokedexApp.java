@@ -27,10 +27,12 @@ public class PokedexApp extends Application {
     private ProfessorAssistant professorAssistant;
     private SelettoreGenerazione selettoreGenerazione;
     private TextField searchField;
+    private MusicManager musicManager = new MusicManager();
 
     @Override
     public void start(Stage primaryStage) {
-        MusicManager musicManager = new MusicManager();
+
+
         musicManager.play();
         this.primaryStage = primaryStage;
 
@@ -84,7 +86,7 @@ public class PokedexApp extends Application {
         statusLabel = new Label("Caricamento in corso...");
         statusLabel.setVisible(false);
 
-        bottomArea.getChildren().add(statusLabel);
+        bottomArea.getChildren().add(statusLabel); // Rimuovi volumeControl da qui
         root.setBottom(bottomArea);
 
         StackPane overlayPane = new StackPane();
@@ -131,6 +133,20 @@ public class PokedexApp extends Application {
                 .orElse(new Button("Cerca"));
 
         searchButton.setOnAction(e -> performSearch(searchField.getText()));
+
+        // Crea controllo volume
+        HBox volumeControl = createVolumeControl();
+
+        // Aggiungi il controllo volume all'header
+        // Trova lo spaziatore (spacer2) e inserisci il controllo volume prima di esso
+        for (int i = 0; i < header.getChildren().size(); i++) {
+            if (header.getChildren().get(i) instanceof Region && i > 0 &&
+                    HBox.getHgrow(header.getChildren().get(i)) == Priority.ALWAYS &&
+                    i < header.getChildren().size() - 1) {
+                header.getChildren().add(i, volumeControl);
+                break;
+            }
+        }
 
         return header;
     }
@@ -313,9 +329,50 @@ public class PokedexApp extends Application {
         if (professorAssistant != null) {
             professorAssistant.shutdown();
         }
+        if (musicManager != null) {
+            musicManager.shutdown();
+        }
     }
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    private HBox createVolumeControl() {
+        HBox volumeBox = new HBox(8);
+        volumeBox.setAlignment(Pos.CENTER);
+        volumeBox.setPadding(new Insets(0, 5, 0, 5));
+        volumeBox.getStyleClass().add("volume-control-box");
+
+        // Icona audio (usiamo testo diretto)
+        Button muteButton = new Button(musicManager.isMuted() ? "🔇" : "🔊");
+        muteButton.getStyleClass().addAll("btn", "volume-button");
+        muteButton.setOnAction(e -> {
+            musicManager.toggleMute();
+            // Aggiorna testo del pulsante
+            muteButton.setText(musicManager.isMuted() ? "🔇" : "🔊");
+        });
+
+        // Slider volume
+        Slider volumeSlider = new Slider(0, 1, musicManager.getVolume());
+        volumeSlider.setPrefWidth(80);
+        volumeSlider.getStyleClass().add("volume-slider");
+
+        // Aggiorna volume quando lo slider viene mosso
+        volumeSlider.valueProperty().addListener((observable, oldValue, newValue) -> {
+            musicManager.setVolume(newValue.floatValue());
+            // Aggiorna icona in base al volume
+            if (newValue.doubleValue() == 0) {
+                muteButton.setText("🔇");
+            } else if (newValue.doubleValue() < 0.5) {
+                muteButton.setText("🔉");
+            } else {
+                muteButton.setText("🔊");
+            }
+        });
+
+        volumeBox.getChildren().addAll(muteButton, volumeSlider);
+
+        return volumeBox;
     }
 }
