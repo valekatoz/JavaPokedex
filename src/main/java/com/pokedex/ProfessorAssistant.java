@@ -1,6 +1,5 @@
 package com.pokedex;
 
-import com.pokedex.utils.UIFactory;
 import javafx.application.Platform;
 import javafx.beans.binding.Bindings;
 import javafx.geometry.Insets;
@@ -13,7 +12,6 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
-import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -31,10 +29,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-/**
- * Classe che implementa un assistente Pokémon basato su un professore
- * che sfrutta le API di ChatGPT per rispondere alle domande
- */
 public class ProfessorAssistant {
 
     private final String apiKey;
@@ -48,7 +42,6 @@ public class ProfessorAssistant {
     private final Random random = new Random();
     private boolean isProcessing = false;
 
-    // Dati del professore
     private final String professorName = "Professor Lavandonia";
     private final String professorImagePath = "/images/professor.png";
     private final String professorPrompt = "Sei il Professor Lavandonia, esperto di Pokémon e famoso ricercatore. " +
@@ -57,29 +50,21 @@ public class ProfessorAssistant {
             "Se non conosci la risposta a una domanda specifica sui Pokémon, indirizza l'allenatore al Pokédex " +
             "per ulteriori informazioni. Occasionalmente, menziona la tua ricerca sui Pokémon leggendari.";
 
-    /**
-     * Crea un nuovo assistente del professore
-     * @param apiKey La chiave API per ChatGPT
-     */
     public ProfessorAssistant(String apiKey) {
         this.apiKey = apiKey;
         this.funFacts = initializeFunFacts();
 
-        // Crea la finestra della chat
         chatStage = new Stage();
         chatStage.setTitle("Chat con " + professorName);
-        chatStage.initModality(Modality.NONE); // Permette di interagire con la finestra principale
+        chatStage.initModality(Modality.NONE);
         chatStage.initStyle(StageStyle.DECORATED);
 
-        // Container principale
         BorderPane root = new BorderPane();
         root.getStyleClass().add("chat-root");
 
-        // Header con immagine del professore
         HBox header = createHeader();
         root.setTop(header);
 
-        // Area messaggi
         messagesContainer = new VBox(10);
         messagesContainer.setPadding(new Insets(15));
         messagesContainer.getStyleClass().add("messages-container");
@@ -88,10 +73,10 @@ public class ProfessorAssistant {
         scrollPane.setFitToWidth(true);
         scrollPane.getStyleClass().add("chat-scroll-pane");
 
-        // Input area
         HBox inputArea = new HBox(10);
         inputArea.setPadding(new Insets(10));
         inputArea.setAlignment(Pos.CENTER);
+        inputArea.getStyleClass().add("chat-input-area");
 
         inputField = new TextField();
         inputField.setPromptText("Fai una domanda al " + professorName + "...");
@@ -99,7 +84,7 @@ public class ProfessorAssistant {
         HBox.setHgrow(inputField, Priority.ALWAYS);
 
         Button sendButton = new Button("Invia");
-        sendButton.getStyleClass().addAll("btn", "btn-primary");
+        sendButton.getStyleClass().addAll("btn", "btn-primary", "chat-send-button");
         sendButton.disableProperty().bind(
                 Bindings.isEmpty(inputField.textProperty())
                         .or(Bindings.createBooleanBinding(() -> isProcessing))
@@ -110,44 +95,36 @@ public class ProfessorAssistant {
 
         inputArea.getChildren().addAll(inputField, sendButton);
 
-        // Funzionalità aggiuntive
         HBox extrasArea = createExtrasButtons();
 
-        // Area input + extras
         VBox bottomArea = new VBox(10);
         bottomArea.getChildren().addAll(extrasArea, inputArea);
+        bottomArea.getStyleClass().add("chat-bottom-area");
 
         root.setCenter(scrollPane);
         root.setBottom(bottomArea);
 
-        // Chat display area (per debug)
         chatArea = new TextArea();
         chatArea.setEditable(false);
         chatArea.setWrapText(true);
         chatArea.getStyleClass().add("chat-display");
-        chatArea.setVisible(false); // Nascosto per default, usiamo la visualizzazione a bolle
+        chatArea.setVisible(false);
 
-        // Crea la scena
-        Scene scene = new Scene(root, 400, 600);
+        Scene scene = new Scene(root, 420, 600);
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         scene.getStylesheets().add(ProfessorAssistant.class.getResource("/chat-styles.css").toExternalForm());
 
         chatStage.setScene(scene);
 
-        // Aggiungi messaggio di benvenuto
         addAssistantMessage("Ciao! Sono il " + professorName + ", esperto di Pokémon e ricercatore. Come posso aiutarti oggi nel tuo viaggio nel mondo dei Pokémon?");
     }
 
-    /**
-     * Crea l'header della chat con l'immagine e il nome del professore
-     */
     private HBox createHeader() {
         HBox header = new HBox(15);
         header.setPadding(new Insets(10));
         header.setAlignment(Pos.CENTER_LEFT);
         header.getStyleClass().add("chat-header");
 
-        // Immagine del professore
         ImageView professorImageView = new ImageView(new Image(
                 getClass().getResourceAsStream(professorImagePath)));
         professorImageView.setFitHeight(50);
@@ -155,15 +132,16 @@ public class ProfessorAssistant {
         professorImageView.setPreserveRatio(true);
         professorImageView.getStyleClass().add("professor-image");
 
-        // Nome e titolo
         VBox nameBox = new VBox(2);
         Label nameLabel = new Label(professorName);
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 16));
         nameLabel.setTextFill(Color.WHITE);
+        nameLabel.getStyleClass().add("professor-name");
 
         Label statusLabel = new Label("Esperto di Pokémon");
         statusLabel.setFont(Font.font("System", 12));
         statusLabel.setTextFill(Color.LIGHTGRAY);
+        statusLabel.getStyleClass().add("professor-status");
 
         nameBox.getChildren().addAll(nameLabel, statusLabel);
 
@@ -172,24 +150,22 @@ public class ProfessorAssistant {
         return header;
     }
 
-    /**
-     * Crea i bottoni per le funzionalità extra
-     */
     private HBox createExtrasButtons() {
         HBox extrasBox = new HBox(10);
         extrasBox.setPadding(new Insets(0, 10, 0, 10));
         extrasBox.setAlignment(Pos.CENTER);
+        extrasBox.getStyleClass().add("extras-box");
 
         Button funFactButton = new Button("Fatto Divertente");
-        funFactButton.getStyleClass().addAll("btn", "btn-info", "btn-sm");
+        funFactButton.getStyleClass().addAll("btn", "btn-info", "btn-sm", "extras-button");
         funFactButton.setOnAction(e -> showRandomFunFact());
 
         Button pokemonOfDayButton = new Button("Pokémon del Giorno");
-        pokemonOfDayButton.getStyleClass().addAll("btn", "btn-success", "btn-sm");
+        pokemonOfDayButton.getStyleClass().addAll("btn", "btn-success", "btn-sm", "extras-button");
         pokemonOfDayButton.setOnAction(e -> showPokemonOfTheDay());
 
         Button tipButton = new Button("Consiglio per Allenatori");
-        tipButton.getStyleClass().addAll("btn", "btn-warning", "btn-sm");
+        tipButton.getStyleClass().addAll("btn", "btn-warning", "btn-sm", "extras-button");
         tipButton.setOnAction(e -> showTrainerTip());
 
         extrasBox.getChildren().addAll(funFactButton, pokemonOfDayButton, tipButton);
@@ -197,29 +173,22 @@ public class ProfessorAssistant {
         return extrasBox;
     }
 
-    /**
-     * Mostra la finestra della chat
-     */
     public void show() {
         chatStage.show();
+        chatStage.setX((Screen.getPrimary().getVisualBounds().getWidth() - chatStage.getWidth()) / 2);
+        chatStage.setY((Screen.getPrimary().getVisualBounds().getHeight() - chatStage.getHeight()) / 2);
     }
 
-    /**
-     * Invia un messaggio al professore
-     */
     private void sendMessage() {
         String message = inputField.getText().trim();
         if (message.isEmpty() || isProcessing) return;
 
         isProcessing = true;
 
-        // Aggiungi il messaggio dell'utente alla chat
         addUserMessage(message);
 
-        // Pulisci il campo di input
         inputField.clear();
 
-        // Chiama l'API di ChatGPT
         CompletableFuture.supplyAsync(() -> {
             try {
                 return callChatGptApi(message);
@@ -234,17 +203,13 @@ public class ProfessorAssistant {
         });
     }
 
-    /**
-     * Aggiunge un messaggio dell'utente alla chat
-     */
     private void addUserMessage(String message) {
-        // Aggiunge al TextArea (per debug)
         chatArea.appendText("Tu: " + message + "\n\n");
 
-        // Crea una bolla di messaggio per l'utente
         HBox messageBox = new HBox();
         messageBox.setAlignment(Pos.CENTER_RIGHT);
         messageBox.setPadding(new Insets(5, 0, 5, 0));
+        messageBox.getStyleClass().add("user-message-box");
 
         Label messageLabel = new Label(message);
         messageLabel.setWrapText(true);
@@ -256,23 +221,17 @@ public class ProfessorAssistant {
 
         messagesContainer.getChildren().add(messageBox);
 
-        // Scorre automaticamente verso il basso
         Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
 
-    /**
-     * Aggiunge un messaggio dell'assistente alla chat
-     */
     private void addAssistantMessage(String message) {
-        // Aggiunge al TextArea (per debug)
         chatArea.appendText(professorName + ": " + message + "\n\n");
 
-        // Crea una bolla di messaggio per l'assistente
         HBox messageBox = new HBox(10);
         messageBox.setAlignment(Pos.CENTER_LEFT);
         messageBox.setPadding(new Insets(5, 0, 5, 0));
+        messageBox.getStyleClass().add("assistant-message-box");
 
-        // Piccola immagine del professore
         ImageView miniProfessorView = new ImageView(new Image(
                 getClass().getResourceAsStream(professorImagePath)));
         miniProfessorView.setFitHeight(30);
@@ -290,13 +249,9 @@ public class ProfessorAssistant {
 
         messagesContainer.getChildren().add(messageBox);
 
-        // Scorre automaticamente verso il basso
         Platform.runLater(() -> scrollPane.setVvalue(1.0));
     }
 
-    /**
-     * Chiama l'API di ChatGPT per ottenere una risposta
-     */
     private String callChatGptApi(String message) throws IOException {
         URL url = new URL("https://api.openai.com/v1/chat/completions");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
@@ -305,19 +260,16 @@ public class ProfessorAssistant {
         connection.setRequestProperty("Authorization", "Bearer " + apiKey);
         connection.setDoOutput(true);
 
-        // Crea il payload JSON per la richiesta
         JSONObject payload = new JSONObject();
         payload.put("model", "gpt-3.5-turbo");
 
         JSONArray messages = new JSONArray();
 
-        // Istruzioni iniziali per il professore
         JSONObject systemMessage = new JSONObject();
         systemMessage.put("role", "system");
         systemMessage.put("content", professorPrompt);
         messages.put(systemMessage);
 
-        // Messaggio dell'utente
         JSONObject userMessage = new JSONObject();
         userMessage.put("role", "user");
         userMessage.put("content", message);
@@ -327,13 +279,11 @@ public class ProfessorAssistant {
         payload.put("max_tokens", 300);
         payload.put("temperature", 0.7);
 
-        // Invia la richiesta
         try (OutputStream os = connection.getOutputStream()) {
             byte[] input = payload.toString().getBytes("utf-8");
             os.write(input, 0, input.length);
         }
 
-        // Leggi la risposta
         try (BufferedReader br = new BufferedReader(
                 new InputStreamReader(connection.getInputStream(), "utf-8"))) {
             StringBuilder response = new StringBuilder();
@@ -342,7 +292,6 @@ public class ProfessorAssistant {
                 response.append(responseLine.trim());
             }
 
-            // Estrai il contenuto della risposta
             JSONObject jsonResponse = new JSONObject(response.toString());
             JSONArray choices = jsonResponse.getJSONArray("choices");
             if (choices.length() > 0) {
@@ -355,29 +304,18 @@ public class ProfessorAssistant {
         return "Mi dispiace, non sono riuscito a comprendere la tua domanda. Puoi riprovare?";
     }
 
-    /**
-     * Mostra un fatto divertente casuale sui Pokémon
-     */
     private void showRandomFunFact() {
         String funFact = funFacts.get(random.nextInt(funFacts.size()));
         addAssistantMessage("📚 Fatto divertente: " + funFact);
     }
 
-    /**
-     * Mostra il Pokémon del giorno
-     */
     private void showPokemonOfTheDay() {
-        int pokemonId = 1 + random.nextInt(898); // Limita ai Pokémon disponibili
+        int pokemonId = 1 + random.nextInt(898);
 
         addAssistantMessage("✨ Il Pokémon del giorno è il #" + pokemonId + "! " +
                 "Dai un'occhiata nel Pokédex per scoprire di più su questo fantastico Pokémon!");
-
-        // Qui si potrebbe aggiungere una richiesta API per ottenere i dati del Pokémon reale
     }
 
-    /**
-     * Mostra un consiglio casuale per gli allenatori
-     */
     private void showTrainerTip() {
         String[] tips = {
                 "Ricorda di portare sempre con te delle Pozioni! La salute dei tuoi Pokémon è la priorità.",
@@ -396,9 +334,6 @@ public class ProfessorAssistant {
         addAssistantMessage("💡 Consiglio per allenatori: " + tip);
     }
 
-    /**
-     * Inizializza la lista di fatti divertenti sui Pokémon
-     */
     private List<String> initializeFunFacts() {
         List<String> facts = new ArrayList<>();
 
@@ -421,18 +356,11 @@ public class ProfessorAssistant {
         return facts;
     }
 
-    /**
-     * Chiude la risorsa quando l'applicazione viene terminata
-     */
     public void shutdown() {
         executorService.shutdown();
     }
 
-    /**
-     * Crea un pulsante che apre la chat con il professore
-     */
     public Button createChatButton() {
-        // Crea un pulsante con l'immagine del professore
         Button chatButton = new Button();
         chatButton.getStyleClass().add("professor-chat-button");
 
@@ -443,15 +371,23 @@ public class ProfessorAssistant {
         buttonImage.setPreserveRatio(true);
 
         chatButton.setGraphic(buttonImage);
-        chatButton.setTooltip(new Tooltip("Chiedi al " + professorName));
 
-        // Aggiungi tooltip
         Tooltip tooltip = new Tooltip("Chiedi al " + professorName);
         Tooltip.install(chatButton, tooltip);
 
-        // Azione quando viene premuto
         chatButton.setOnAction(e -> show());
 
         return chatButton;
+    }
+
+    // Aggiunto import mancante per Screen
+    private static class Screen {
+        public static Screen getPrimary() {
+            return new Screen();
+        }
+
+        public javafx.geometry.Rectangle2D getVisualBounds() {
+            return javafx.stage.Screen.getPrimary().getVisualBounds();
+        }
     }
 }

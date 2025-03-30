@@ -12,11 +12,7 @@ import javafx.stage.Stage;
 import org.kordamp.bootstrapfx.BootstrapFX;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-/**
- * Applicazione Pokédex con UI migliorata
- */
 public class PokedexApp extends Application {
 
     private final int BATCH_SIZE = 30;
@@ -29,7 +25,7 @@ public class PokedexApp extends Application {
     private ScrollPane scrollPane;
     private boolean isSearchMode = false;
     private ProfessorAssistant professorAssistant;
-    private GenerationSelector generationSelector;
+    private SelettoreGenerazione selettoreGenerazione;
     private TextField searchField;
 
     @Override
@@ -38,27 +34,21 @@ public class PokedexApp extends Application {
         musicManager.play();
         this.primaryStage = primaryStage;
 
-        // Inizializza il controller con cache e repository
         PokedexCache cache = new PokedexCache();
         PokedexApi repository = new PokedexApi();
         controller = new PokedexController(repository, cache, BATCH_SIZE);
 
-        // Inizializza l'assistente del professore
         professorAssistant = new ProfessorAssistant(ConfigUtils.OPENAI_API_KEY);
 
-        // Container principale
         root = new BorderPane();
         root.getStyleClass().add("root");
 
-        // Header
         HBox header = createHeader();
         root.setTop(header);
 
-        // Selettore generazioni
-        generationSelector = new GenerationSelector(this::filterByGeneration);
-        HBox genSelectorContainer = UIFactory.createGenerationSelector(generationSelector);
+        selettoreGenerazione = new SelettoreGenerazione(this::filterByGeneration);
+        HBox genSelectorContainer = UI.createGenerationSelector(selettoreGenerazione);
 
-        // Griglia Pokemon con scroll pane
         pokemonGrid = new FlowPane();
         pokemonGrid.setHgap(20);
         pokemonGrid.setVgap(20);
@@ -69,14 +59,15 @@ public class PokedexApp extends Application {
         scrollPane.setFitToWidth(true);
         scrollPane.getStyleClass().add("scroll-pane");
 
-        // Implementazione dello scroll infinito
         scrollPane.vvalueProperty().addListener((observable, oldValue, newValue) -> {
-            // Se siamo in modalità ricerca, non caricare automaticamente
             if (isSearchMode) return;
 
-            // Se l'utente è vicino al fondo e non stiamo già caricando
-            if (newValue.doubleValue() > 0.9 && !controller.isLoading()) {
-                loadMorePokemon();
+            int selectedGeneration = selettoreGenerazione.getSelectedGeneration();
+
+            if (newValue.doubleValue() > 0.8 && !controller.isLoading()) {
+                if (selectedGeneration == 0 || !controller.isGenerationFullyLoaded(selectedGeneration)) {
+                    loadMorePokemon();
+                }
             }
         });
 
@@ -86,7 +77,6 @@ public class PokedexApp extends Application {
 
         root.setCenter(contentArea);
 
-        // Area stato
         VBox bottomArea = new VBox(10);
         bottomArea.setAlignment(Pos.CENTER);
         bottomArea.setPadding(new Insets(10));
@@ -97,7 +87,6 @@ public class PokedexApp extends Application {
         bottomArea.getChildren().add(statusLabel);
         root.setBottom(bottomArea);
 
-        // Aggiungi il pulsante flottante del professore
         StackPane overlayPane = new StackPane();
         overlayPane.getChildren().add(root);
 
@@ -106,32 +95,27 @@ public class PokedexApp extends Application {
         StackPane.setMargin(professorButton, new Insets(0, 20, 20, 0));
         overlayPane.getChildren().add(professorButton);
 
-        // Crea la scena
         Scene scene = new Scene(overlayPane, 850, 650);
 
-        // Aggiungi CSS con il metodo corretto per BootstrapFX
         scene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         scene.getStylesheets().add(getClass().getResource("/pokemon-styles.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/chat-styles.css").toExternalForm());
         scene.getStylesheets().add(getClass().getResource("/styles.css").toExternalForm());
 
-        // Configura lo stage
-        primaryStage.setTitle("Modern Pokédex");
+        primaryStage.setTitle("Pokédex Tommypat e Valekatoz");
         primaryStage.setScene(scene);
         primaryStage.show();
 
-        // Carica il batch iniziale
         loadMorePokemon();
     }
 
     private HBox createHeader() {
         backButton = new Button("Torna al Pokédex");
-        backButton.setVisible(false); // Inizialmente nascosto
+        backButton.setVisible(false);
         backButton.setOnAction(e -> resetAndShowAllPokemon());
 
-        HBox header = UIFactory.createImprovedHeader(backButton);
+        HBox header = UI.createImprovedHeader(backButton);
 
-        // Aggiungi funzionalità di ricerca
         searchField = (TextField) header.getChildren().stream()
                 .filter(node -> node instanceof HBox)
                 .flatMap(hbox -> ((HBox) hbox).getChildren().stream())
@@ -155,7 +139,6 @@ public class PokedexApp extends Application {
         searchTerm = searchTerm.trim();
         if (searchTerm.isEmpty()) return;
 
-        // Mostra il pulsante per tornare alla lista completa
         backButton.setVisible(true);
         isSearchMode = true;
 
@@ -167,50 +150,72 @@ public class PokedexApp extends Application {
     private void loadMorePokemon() {
         if (controller.isLoading()) return;
 
+        int selectedGeneration = selettoreGenerazione.getSelectedGeneration();
         statusLabel.setVisible(true);
 
-        // Aggiungi placeholders per il prossimo batch
-        for (int i = 0; i < BATCH_SIZE; i++) {
-            pokemonGrid.getChildren().add(UIFactory.createPlaceholder());
+        int placeholdersToAdd = selectedGeneration == 0 ? BATCH_SIZE : 10;
+        for (int i = 0; i < placeholdersToAdd; i++) {
+            pokemonGrid.getChildren().add(UI.createPlaceholder());
         }
 
-        controller.loadNextBatch(
-                pokemonList -> {
-                    // Rimuovi i placeholders
-                    pokemonGrid.getChildren().removeIf(node -> node.getStyleClass().contains("placeholder"));
+        if (selectedGeneration == 0) {
+            controller.loadNextBatch(
+                    pokemonList -> {
+                        pokemonGrid.getChildren().removeIf(node -> node.getStyleClass().contains("placeholder"));
 
-                    // Filtra per generazione selezionata
-                    List<Pokemon> filteredList = pokemonList.stream()
-                            .filter(pokemon -> generationSelector.isInSelectedGeneration(pokemon.getId()))
-                            .collect(Collectors.toList());
+                        for (Pokemon pokemon : pokemonList) {
+                            VBox pokemonCard = UI.createPokemonCard(pokemon);
+                            pokemonCard.setOnMouseClicked(e -> showPokemonDetails(pokemon));
+                            pokemonGrid.getChildren().add(pokemonCard);
+                        }
 
-                    // Aggiungi le card con i dati reali
-                    for (Pokemon pokemon : filteredList) {
-                        VBox pokemonCard = UIFactory.createPokemonCard(pokemon);
-
-                        // Aggiungi un listener per visualizzare i dettagli del Pokémon
-                        pokemonCard.setOnMouseClicked(e -> showPokemonDetails(pokemon));
-
-                        pokemonGrid.getChildren().add(pokemonCard);
+                        statusLabel.setVisible(false);
+                    },
+                    error -> {
+                        pokemonGrid.getChildren().removeIf(node -> node.getStyleClass().contains("placeholder"));
+                        showError("Errore durante il caricamento: " + error);
                     }
+            );
+        } else {
+            controller.loadPokemonByGeneration(selectedGeneration,
+                    pokemonList -> {
+                        pokemonGrid.getChildren().removeIf(node -> node.getStyleClass().contains("placeholder"));
 
-                    statusLabel.setVisible(false);
-                },
-                error -> {
-                    pokemonGrid.getChildren().removeIf(node -> node.getStyleClass().contains("placeholder"));
-                    showError("Errore durante il caricamento: " + error);
-                }
-        );
+                        if (pokemonList.isEmpty()) {
+                            Label noResultsLabel = new Label("Nessun Pokémon trovato per questa generazione");
+                            noResultsLabel.getStyleClass().add("no-results-message");
+                            pokemonGrid.getChildren().add(noResultsLabel);
+                        } else {
+                            for (Pokemon pokemon : pokemonList) {
+                                VBox pokemonCard = UI.createPokemonCard(pokemon);
+                                pokemonCard.setOnMouseClicked(e -> showPokemonDetails(pokemon));
+                                pokemonGrid.getChildren().add(pokemonCard);
+                            }
+
+                            if (!controller.isGenerationFullyLoaded(selectedGeneration) &&
+                                    scrollPane.getVvalue() > 0.8) {
+                                loadMorePokemon();
+                            }
+                        }
+
+                        statusLabel.setVisible(false);
+                    },
+                    error -> {
+                        pokemonGrid.getChildren().removeIf(node -> node.getStyleClass().contains("placeholder"));
+                        showError("Errore durante il caricamento: " + error);
+                    }
+            );
+        }
     }
 
     private void updateUIWithSearchResults(List<Pokemon> results) {
         pokemonGrid.getChildren().clear();
 
         if (results.isEmpty()) {
-            pokemonGrid.getChildren().add(UIFactory.createNoResultsMessage());
+            pokemonGrid.getChildren().add(UI.createNoResultsMessage());
         } else {
             for (Pokemon pokemon : results) {
-                VBox pokemonCard = UIFactory.createPokemonCard(pokemon);
+                VBox pokemonCard = UI.createPokemonCard(pokemon);
                 pokemonCard.setOnMouseClicked(e -> showPokemonDetails(pokemon));
                 pokemonGrid.getChildren().add(pokemonCard);
             }
@@ -218,51 +223,34 @@ public class PokedexApp extends Application {
     }
 
     private void resetAndShowAllPokemon() {
-        // Pulisci la griglia
         pokemonGrid.getChildren().clear();
-
-        // Resetta il controller
         controller.resetOffset();
-
-        // Nascondi il pulsante indietro
         backButton.setVisible(false);
-
-        // Disattiva la modalità ricerca
         isSearchMode = false;
-
-        // Reimposta la posizione di scroll a inizio pagina
         scrollPane.setVvalue(0);
-
-        // Carica nuovamente il primo batch
         loadMorePokemon();
     }
 
     private void filterByGeneration(int generation) {
-        // Solo se non siamo in modalità ricerca
         if (!isSearchMode) {
             pokemonGrid.getChildren().clear();
-            controller.resetOffset();
             scrollPane.setVvalue(0);
             loadMorePokemon();
         }
     }
 
     private void showPokemonDetails(Pokemon basicPokemon) {
-        // Crea una nuova finestra per i dettagli
         Stage detailStage = new Stage();
-        detailStage.setTitle("Dettagli di " + UIFactory.capitalize(basicPokemon.getName()));
+        detailStage.setTitle("Dettagli di " + UI.capitalize(basicPokemon.getName()));
 
-        // Crea un contenitore con indicatore di caricamento
         BorderPane detailRoot = new BorderPane();
 
-        // Indicatore di caricamento temporaneo
         VBox loadingBox = new VBox(10);
         loadingBox.setAlignment(Pos.CENTER);
         Label loadingLabel = new Label("Caricamento dettagli...");
         loadingBox.getChildren().add(loadingLabel);
         detailRoot.setCenter(loadingBox);
 
-        // Mostra la finestra con l'indicatore di caricamento
         Scene detailScene = new Scene(detailRoot, 700, 700);
         detailScene.getStylesheets().add(BootstrapFX.bootstrapFXStylesheet());
         detailScene.getStylesheets().add(getClass().getResource("/pokemon-styles.css").toExternalForm());
@@ -270,11 +258,9 @@ public class PokedexApp extends Application {
         detailStage.setScene(detailScene);
         detailStage.show();
 
-        // Carica i dettagli completi
         controller.loadPokemonDetails(basicPokemon.getId(),
                 detailedPokemon -> {
-                    // Crea la visualizzazione dettagliata con il nuovo design
-                    ScrollPane detailView = DetailViewFactory.createDetailView(detailedPokemon, () -> detailStage.close());
+                    ScrollPane detailView = DettagliPokemon.createDetailView(detailedPokemon, () -> detailStage.close());
                     detailRoot.setCenter(detailView);
                 },
                 error -> {
@@ -292,7 +278,6 @@ public class PokedexApp extends Application {
 
     @Override
     public void stop() {
-        // Chiudi correttamente le risorse
         if (professorAssistant != null) {
             professorAssistant.shutdown();
         }

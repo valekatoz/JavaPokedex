@@ -3,14 +3,9 @@ package com.pokedex.utils;
 import com.pokedex.pokemon.PokemonData;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.chart.BarChart;
-import javafx.scene.chart.CategoryAxis;
-import javafx.scene.chart.NumberAxis;
-import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Separator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
@@ -22,7 +17,7 @@ import java.util.Map;
 /**
  * Classe per la creazione di una vista dettagliata migliorata dei Pokémon
  */
-public class DetailViewFactory {
+public class DettagliPokemon {
 
     /**
      * Crea una vista dettagliata avanzata per un Pokémon
@@ -33,7 +28,7 @@ public class DetailViewFactory {
     public static ScrollPane createDetailView(PokemonData pokemon, Runnable onClose) {
         // Ottieni il tipo primario per lo styling
         String primaryType = pokemon.getTypes().get(0).toLowerCase();
-        String accentColor = TypeStyleUtils.CARD_BORDER_COLORS.getOrDefault(primaryType, "#5DA0FF");
+        String accentColor = StilePerTipoPokemon.CARD_BORDER_COLORS.getOrDefault(primaryType, "#5DA0FF");
 
         // Container principale con sfondo basato sul tipo
         VBox detailContainer = new VBox(20);
@@ -56,7 +51,7 @@ public class DetailViewFactory {
         idLabel.getStyleClass().add("detail-id");
 
         // Nome del Pokémon
-        Label nameLabel = new Label(UIFactory.capitalize(pokemon.getName()));
+        Label nameLabel = new Label(UI.capitalize(pokemon.getName()));
         nameLabel.getStyleClass().add("detail-name");
         nameLabel.setFont(Font.font("System", FontWeight.BOLD, 32));
 
@@ -65,8 +60,8 @@ public class DetailViewFactory {
         typesBox.setAlignment(Pos.CENTER);
 
         for (String type : pokemon.getTypes()) {
-            Label typeLabel = new Label(UIFactory.capitalize(type));
-            typeLabel.getStyleClass().addAll("type-label-large", TypeStyleUtils.getTypeClass(type));
+            Label typeLabel = new Label(UI.capitalize(type));
+            typeLabel.getStyleClass().addAll("type-label-large", StilePerTipoPokemon.getTypeClass(type));
             typesBox.getChildren().add(typeLabel);
         }
 
@@ -121,7 +116,7 @@ public class DetailViewFactory {
         // Categoria
         VBox categoryBox = new VBox(5);
         categoryBox.setAlignment(Pos.CENTER);
-        Label categoryValue = new Label(UIFactory.capitalize(pokemon.getSpecies()));
+        Label categoryValue = new Label(UI.capitalize(pokemon.getSpecies()));
         categoryValue.getStyleClass().add("attribute-value");
         Label categoryTitle = new Label("Specie");
         categoryTitle.getStyleClass().add("attribute-title");
@@ -206,7 +201,7 @@ public class DetailViewFactory {
 
         // Crea barre per ogni statistica
         for (Map.Entry<String, Integer> entry : pokemon.getStats().entrySet()) {
-            String statName = statNames.getOrDefault(entry.getKey(), UIFactory.capitalize(entry.getKey()));
+            String statName = statNames.getOrDefault(entry.getKey(), UI.capitalize(entry.getKey()));
             int value = entry.getValue();
 
             // Contenitore per la singola statistica
@@ -269,7 +264,7 @@ public class DetailViewFactory {
         VBox abilitiesList = new VBox(10);
 
         for (String ability : pokemon.getAbilities()) {
-            Label abilityLabel = new Label(UIFactory.capitalize(ability));
+            Label abilityLabel = new Label(UI.capitalize(ability));
             abilityLabel.getStyleClass().add("ability-item");
 
             if (ability.contains("nascosta")) {
@@ -313,7 +308,7 @@ public class DetailViewFactory {
         movesFlow.setVgap(10);
 
         for (String move : pokemon.getMoves()) {
-            Label moveLabel = new Label(UIFactory.capitalize(move));
+            Label moveLabel = new Label(UI.capitalize(move));
             moveLabel.getStyleClass().add("move-chip");
             moveLabel.setStyle("-fx-border-color: " + accentColor + "80;");
 

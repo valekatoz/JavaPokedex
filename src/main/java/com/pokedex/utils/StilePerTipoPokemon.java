@@ -6,22 +6,15 @@ import javafx.scene.layout.VBox;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Utility per lo styling delle card Pokémon in base al tipo
- */
-public class TypeStyleUtils {
+public class StilePerTipoPokemon {
 
-    // Mappa dei colori di background per le card in base al tipo primario
     private static final Map<String, String> CARD_BACKGROUND_COLORS = new HashMap<>();
 
-    // Mappa dei colori di bordo per le card in base al tipo primario
     public static final Map<String, String> CARD_BORDER_COLORS = new HashMap<>();
 
-    // Mappa delle classi CSS per i tipi
     private static final Map<String, String> TYPE_CLASSES = new HashMap<>();
 
     static {
-        // Inizializza i colori di background per le card
         CARD_BACKGROUND_COLORS.put("normal", "#F5F5F5");
         CARD_BACKGROUND_COLORS.put("fire", "#FFF1F0");
         CARD_BACKGROUND_COLORS.put("water", "#F0F9FF");
@@ -41,7 +34,7 @@ public class TypeStyleUtils {
         CARD_BACKGROUND_COLORS.put("steel", "#F5F5F8");
         CARD_BACKGROUND_COLORS.put("fairy", "#FFF0F5");
 
-        // Inizializza i colori di bordo per le card
+        // colori del bordo
         CARD_BORDER_COLORS.put("normal", "#AAAAAA");
         CARD_BORDER_COLORS.put("fire", "#FF6B70");
         CARD_BORDER_COLORS.put("water", "#5DA0FF");
@@ -61,29 +54,20 @@ public class TypeStyleUtils {
         CARD_BORDER_COLORS.put("steel", "#B2B2C8");
         CARD_BORDER_COLORS.put("fairy", "#F5B0D0");
 
-        // Inizializza le classi CSS per ogni tipo
         for (String type : CARD_BACKGROUND_COLORS.keySet()) {
             TYPE_CLASSES.put(type, "type-" + type);
         }
     }
 
-    /**
-     * Applica lo stile alla card Pokémon in base al tipo primario
-     * @param card La card a cui applicare lo stile
-     * @param pokemon Il Pokémon di cui ottenere il tipo
-     */
     public static void applyTypeStyle(VBox card, Pokemon pokemon) {
         if (pokemon == null || pokemon.getTypes().isEmpty()) {
             return;
         }
 
-        // Ottieni il tipo primario (il primo nella lista)
         String primaryType = pokemon.getTypes().get(0).toLowerCase();
 
-        // Aggiungi classe CSS specifica per il tipo
         card.getStyleClass().add(primaryType);
 
-        // Imposta colore di background
         String backgroundColor = CARD_BACKGROUND_COLORS.getOrDefault(primaryType, "#FFFFFF");
         card.setStyle("-fx-background-color: " + backgroundColor + ";");
 
@@ -91,12 +75,6 @@ public class TypeStyleUtils {
         String borderColor = CARD_BORDER_COLORS.getOrDefault(primaryType, "#DDDDDD");
         card.setStyle(card.getStyle() + " -fx-border-color: " + borderColor + "; -fx-border-width: 2; -fx-border-radius: 20;");
     }
-
-    /**
-     * Ottiene la classe CSS per un tipo specifico
-     * @param type Il tipo di cui ottenere la classe CSS
-     * @return La classe CSS per il tipo specificato
-     */
     public static String getTypeClass(String type) {
         return TYPE_CLASSES.getOrDefault(type.toLowerCase(), "");
     }

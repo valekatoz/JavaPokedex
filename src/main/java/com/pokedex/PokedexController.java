@@ -2,16 +2,15 @@ package com.pokedex;
 
 import com.pokedex.pokemon.Pokemon;
 import com.pokedex.pokemon.PokemonData;
+import com.pokedex.utils.SelettoreGenerazione;
 import javafx.application.Platform;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
-/**
- * Controller che gestisce la logica dell'applicazione e coordina
- * il repository API con la cache
- */
 public class PokedexController {
     private final PokedexApi repository;
     private final PokedexCache cache;
@@ -25,15 +24,11 @@ public class PokedexController {
         this.batchSize = batchSize;
     }
 
-    /**
-     * Carica il prossimo batch di Pokémon, utilizzando la cache quando possibile
-     */
     public void loadNextBatch(Consumer<List<Pokemon>> onSuccess, Consumer<String> onError) {
         if (isLoading) return;
 
         isLoading = true;
 
-        // Controlla se il batch è già in cache
         if (cache.hasBatch(currentOffset)) {
             List<Pokemon> batch = cache.getBatch(currentOffset, batchSize);
             Platform.runLater(() -> {
@@ -44,10 +39,8 @@ public class PokedexController {
             return;
         }
 
-        // Recupera il batch dalle API
         repository.fetchPokemonBatch(currentOffset, batchSize)
                 .thenAccept(pokemonList -> {
-                    // Salva nella cache ogni Pokémon e l'intero batch
                     for (Pokemon pokemon : pokemonList) {
                         cache.cachePokemon(pokemon);
                     }
@@ -68,21 +61,15 @@ public class PokedexController {
                 });
     }
 
-    /**
-     * Carica i dettagli completi di un singolo Pokémon
-     */
     public void loadPokemonDetails(int pokemonId, Consumer<PokemonData> onSuccess, Consumer<String> onError) {
-        // Verifica se i dettagli estesi sono già in cache
         if (cache.hasDetailedPokemon(pokemonId)) {
             PokemonData detailedPokemon = cache.getDetailedPokemon(pokemonId);
             Platform.runLater(() -> onSuccess.accept(detailedPokemon));
             return;
         }
 
-        // Altrimenti recupera i dettagli completi dall'API
         repository.fetchPokemonDetailsComplete(pokemonId)
                 .thenAccept(detailedPokemon -> {
-                    // Salva i dettagli completi in cache
                     cache.cacheDetailedPokemon(detailedPokemon);
 
                     Platform.runLater(() -> onSuccess.accept(detailedPokemon));
@@ -93,15 +80,11 @@ public class PokedexController {
                 });
     }
 
-    /**
-     * Cerca Pokémon per nome o ID
-     */
     public void searchPokemon(String query, Consumer<List<Pokemon>> onSuccess, Consumer<String> onError) {
         if (isLoading) return;
 
         isLoading = true;
 
-        // Controlla se la ricerca è già in cache
         if (cache.hasSearchResults(query)) {
             List<Pokemon> results = cache.getSearchResults(query);
             Platform.runLater(() -> {
@@ -111,10 +94,8 @@ public class PokedexController {
             return;
         }
 
-        // Esegui la ricerca attraverso l'API
         repository.searchPokemonByNameOrId(query)
                 .thenAccept(pokemon -> {
-                    // Salva il risultato in cache
                     cache.cachePokemon(pokemon);
                     List<Pokemon> results = List.of(pokemon);
                     cache.cacheSearchResults(query, results);
@@ -125,7 +106,6 @@ public class PokedexController {
                     });
                 })
                 .exceptionally(e -> {
-                    // Cerca nei Pokémon già in cache
                     List<Pokemon> cachedResults = searchInCache(query);
                     if (!cachedResults.isEmpty()) {
                         cache.cacheSearchResults(query, cachedResults);
@@ -143,9 +123,6 @@ public class PokedexController {
                 });
     }
 
-    /**
-     * Ricerca nei Pokémon già presenti in cache
-     */
     private List<Pokemon> searchInCache(String query) {
         String lowercaseQuery = query.toLowerCase();
         return cache.getPokemonMapValues().stream()
@@ -154,17 +131,110 @@ public class PokedexController {
                 .collect(Collectors.toList());
     }
 
-    /**
-     * Restituisce lo stato del caricamento
-     */
     public boolean isLoading() {
         return isLoading;
     }
 
-    /**
-     * Resetta l'offset per ricominciare da capo
-     */
     public void resetOffset() {
         currentOffset = 0;
+    }
+
+    public void loadPokemonByGeneration(int generation, Consumer<List<Pokemon>> onSuccess, Consumer<String> onError) {
+        if (isLoading) return;
+
+        isLoading = true;
+
+        int[] limits = SelettoreGenerazione.getGenerationLimits(generation);
+        int startId = limits[0];
+        int endId = limits[1];
+
+        if (generation == 0) {
+            loadNextBatch(onSuccess, onError);
+            return;
+        }
+
+        List<Pokemon> cachedGenerationPokemon = getCachedPokemonByGeneration(generation);
+        if (!cachedGenerationPokemon.isEmpty() && cachedGenerationPokemon.size() >= (endId - startId + 1)) {
+            Platform.runLater(() -> {
+                onSuccess.accept(cachedGenerationPokemon);
+                isLoading = false;
+            });
+            return;
+        }
+
+        List<CompletableFuture<Pokemon>> futures = new ArrayList<>();
+
+        for (int id = startId; id <= endId; id++) {
+            final int pokemonId = id;
+
+            if (cache.hasPokemon(pokemonId)) {
+                Pokemon pokemon = cache.getPokemon(pokemonId);
+                futures.add(CompletableFuture.completedFuture(pokemon));
+            } else {
+                String url = "https://pokeapi.co/api/v2/pokemon/" + pokemonId;
+                futures.add(repository.fetchPokemonDetailsBasic(url));
+            }
+
+            if (futures.size() >= 10) {
+                break;
+            }
+        }
+
+        CompletableFuture.allOf(futures.toArray(new CompletableFuture[0]))
+                .thenAccept(v -> {
+                    List<Pokemon> result = new ArrayList<>();
+                    for (CompletableFuture<Pokemon> future : futures) {
+                        try {
+                            Pokemon pokemon = future.get();
+                            if (pokemon != null) {
+                                cache.cachePokemon(pokemon);
+                                result.add(pokemon);
+                            }
+                        } catch (Exception e) {
+                            System.err.println("Errore nel recupero del Pokémon: " + e.getMessage());
+                        }
+                    }
+
+                    Platform.runLater(() -> {
+                        onSuccess.accept(result);
+                        isLoading = false;
+                    });
+                })
+                .exceptionally(e -> {
+                    Platform.runLater(() -> {
+                        onError.accept(e.getMessage());
+                        isLoading = false;
+                    });
+                    return null;
+                });
+    }
+
+    private List<Pokemon> getCachedPokemonByGeneration(int generation) {
+        if (generation == 0) {
+            return new ArrayList<>(cache.getPokemonMapValues());
+        }
+
+        int[] limits = SelettoreGenerazione.getGenerationLimits(generation);
+        int startId = limits[0];
+        int endId = limits[1];
+
+        return cache.getPokemonMapValues().stream()
+                .filter(p -> p.getId() >= startId && p.getId() <= endId)
+                .sorted((p1, p2) -> Integer.compare(p1.getId(), p2.getId()))
+                .collect(Collectors.toList());
+    }
+
+    public boolean isGenerationFullyLoaded(int generation) {
+        if (generation == 0) {
+            return false;
+        }
+
+        int[] limits = SelettoreGenerazione.getGenerationLimits(generation);
+        int startId = limits[0];
+        int endId = limits[1];
+        int expectedSize = endId - startId + 1;
+
+        List<Pokemon> generationPokemon = getCachedPokemonByGeneration(generation);
+        return generationPokemon.size() >= expectedSize;
     }
 }

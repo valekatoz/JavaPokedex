@@ -9,10 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-/**
- * Sistema di cache per i dati dei Pokémon per evitare di ricaricarli
- * ad ogni accesso e migliorare le prestazioni dell'applicazione
- */
 public class PokedexCache {
     // Cache per i dati completi dei singoli Pokémon (id -> PokemonData)
     private final Map<Integer, Pokemon> pokemonCache = new ConcurrentHashMap<>();
@@ -122,12 +118,6 @@ public class PokedexCache {
         searchCache.clear();
     }
 
-    /**
-     * Dimensione attuale della cache dei Pokémon
-     */
-    public int size() {
-        return pokemonCache.size();
-    }
 
     /**
      * Ottiene tutti i Pokémon presenti nella cache come Collection

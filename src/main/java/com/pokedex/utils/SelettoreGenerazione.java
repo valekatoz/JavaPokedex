@@ -10,36 +10,26 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
-/**
- * Classe che implementa un selettore di generazioni Pokémon
- */
-public class GenerationSelector {
+public class SelettoreGenerazione {
     private final HBox container;
     private final Map<Integer, Button> genButtons = new HashMap<>();
-    private int selectedGeneration = 0; // 0 means all generations
+    private int selectedGeneration = 0;
     private Consumer<Integer> onGenerationSelected;
 
-    /**
-     * Map che associa ogni generazione ai suoi limiti di Pokémon
-     */
-    private static final Map<Integer, int[]> GENERATION_LIMITS = new HashMap<>();
+    public static final Map<Integer, int[]> GENERATION_LIMITS = new HashMap<>();
 
     static {
-        // Format: [startId, endId]
-        GENERATION_LIMITS.put(1, new int[]{1, 151});      // Gen I: Kanto
-        GENERATION_LIMITS.put(2, new int[]{152, 251});    // Gen II: Johto
-        GENERATION_LIMITS.put(3, new int[]{252, 386});    // Gen III: Hoenn
-        GENERATION_LIMITS.put(4, new int[]{387, 493});    // Gen IV: Sinnoh
-        GENERATION_LIMITS.put(5, new int[]{494, 649});    // Gen V: Unova
-        GENERATION_LIMITS.put(6, new int[]{650, 721});    // Gen VI: Kalos
-        GENERATION_LIMITS.put(7, new int[]{722, 809});    // Gen VII: Alola
-        GENERATION_LIMITS.put(8, new int[]{810, 898});    // Gen VIII: Galar
+        GENERATION_LIMITS.put(1, new int[]{1, 151});
+        GENERATION_LIMITS.put(2, new int[]{152, 251});
+        GENERATION_LIMITS.put(3, new int[]{252, 386});
+        GENERATION_LIMITS.put(4, new int[]{387, 493});
+        GENERATION_LIMITS.put(5, new int[]{494, 649});
+        GENERATION_LIMITS.put(6, new int[]{650, 721});
+        GENERATION_LIMITS.put(7, new int[]{722, 809});
+        GENERATION_LIMITS.put(8, new int[]{810, 898});
     }
 
-    /**
-     * Crea un nuovo selettore di generazioni
-     */
-    public GenerationSelector(Consumer<Integer> onGenerationSelected) {
+    public SelettoreGenerazione(Consumer<Integer> onGenerationSelected) {
         this.onGenerationSelected = onGenerationSelected;
 
         container = new HBox(10);
@@ -49,28 +39,19 @@ public class GenerationSelector {
         createGenerationButtons();
     }
 
-    /**
-     * Crea i bottoni per ogni generazione
-     */
     private void createGenerationButtons() {
-        // Tutte le generazioni
         Button allGenButton = createGenButton("All", 0);
         container.getChildren().add(allGenButton);
 
-        // Generazioni da I a VIII con numeri romani
         String[] romanNumerals = {"I", "II", "III", "IV", "V", "VI", "VII", "VIII"};
         for (int i = 0; i < romanNumerals.length; i++) {
             Button genButton = createGenButton(romanNumerals[i], i + 1);
             container.getChildren().add(genButton);
         }
 
-        // Seleziona la prima opzione (tutte le generazioni) per impostazione predefinita
         selectGeneration(0);
     }
 
-    /**
-     * Crea un singolo bottone per la generazione
-     */
     private Button createGenButton(String label, int genNumber) {
         Button button = new Button(label);
         button.getStyleClass().add("gen-button");
@@ -99,14 +80,9 @@ public class GenerationSelector {
         return button;
     }
 
-    /**
-     * Seleziona visivamente una generazione
-     */
     public void selectGeneration(int genNumber) {
-        // Rimuovi la classe active da tutti i bottoni
         genButtons.values().forEach(btn -> btn.getStyleClass().remove("active"));
 
-        // Aggiungi la classe active al bottone selezionato
         Button selectedButton = genButtons.get(genNumber);
         if (selectedButton != null) {
             selectedButton.getStyleClass().add("active");
@@ -114,35 +90,15 @@ public class GenerationSelector {
         }
     }
 
-    /**
-     * Ottiene il container del selettore di generazioni
-     */
     public Node getNode() {
         return container;
     }
 
-    /**
-     * Controlla se un Pokémon appartiene alla generazione selezionata
-     */
-    public boolean isInSelectedGeneration(int pokemonId) {
-        if (selectedGeneration == 0) {
-            return true; // Tutte le generazioni
-        }
 
-        int[] limits = GENERATION_LIMITS.get(selectedGeneration);
-        return pokemonId >= limits[0] && pokemonId <= limits[1];
-    }
-
-    /**
-     * Ottiene la generazione selezionata
-     */
     public int getSelectedGeneration() {
         return selectedGeneration;
     }
 
-    /**
-     * Restituisce il nome della regione per una generazione
-     */
     private String getRegionName(int genNumber) {
         switch (genNumber) {
             case 1: return "Kanto";
@@ -155,5 +111,12 @@ public class GenerationSelector {
             case 8: return "Galar";
             default: return "Regione sconosciuta";
         }
+    }
+
+    public static int[] getGenerationLimits(int generation) {
+        if (generation == 0) {
+            return new int[]{1, 898};
+        }
+        return GENERATION_LIMITS.getOrDefault(generation, new int[]{1, 898});
     }
 }
