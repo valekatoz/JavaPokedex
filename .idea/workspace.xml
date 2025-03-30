@@ -5,20 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2d6e1247-3764-4326-8e8b-cc2befdb0d16" name="Changes" comment="Qualcosa">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/UI.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/resources/images/chatbackground.svg" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexApp.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexApp.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexCache.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexCache.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/PokedexController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/ProfessorAssistant.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/ProfessorAssistant.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/DetailViewFactory.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/DettagliPokemon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/GenerationSelector.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/SelettoreGenerazione.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/MusicManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/MusicManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/StatsChartUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/StatsChartUtils.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/TypeStyleUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/StilePerTipoPokemon.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/pokedex/utils/UIFactory.java" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/chat-styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/chat-styles.css" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

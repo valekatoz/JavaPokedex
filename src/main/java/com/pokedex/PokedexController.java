@@ -237,4 +237,10 @@ public class PokedexController {
         List<Pokemon> generationPokemon = getCachedPokemonByGeneration(generation);
         return generationPokemon.size() >= expectedSize;
     }
+
+    public List<Pokemon> getCachedPokemon() {
+        return cache.getPokemonMapValues().stream()
+                .sorted((p1, p2) -> Integer.compare(p1.getId(), p2.getId()))
+                .collect(Collectors.toList());
+    }
 }

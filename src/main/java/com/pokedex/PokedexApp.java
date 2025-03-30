@@ -224,18 +224,50 @@ public class PokedexApp extends Application {
 
     private void resetAndShowAllPokemon() {
         pokemonGrid.getChildren().clear();
-        controller.resetOffset();
         backButton.setVisible(false);
         isSearchMode = false;
         scrollPane.setVvalue(0);
-        loadMorePokemon();
+
+        // Non resettare l'offset
+        // controller.resetOffset();
+
+        // Usa i Pokémon già caricati
+        List<Pokemon> cachedPokemon = controller.getCachedPokemon();
+        if (cachedPokemon != null && !cachedPokemon.isEmpty()) {
+            for (Pokemon pokemon : cachedPokemon) {
+                VBox pokemonCard = UI.createPokemonCard(pokemon);
+                pokemonCard.setOnMouseClicked(e -> showPokemonDetails(pokemon));
+                pokemonGrid.getChildren().add(pokemonCard);
+            }
+        } else {
+            loadMorePokemon();
+        }
     }
 
     private void filterByGeneration(int generation) {
         if (!isSearchMode) {
             pokemonGrid.getChildren().clear();
             scrollPane.setVvalue(0);
-            loadMorePokemon();
+
+            if (generation == 0) {
+                // Per "All", mostra i Pokémon già caricati invece di caricarne di nuovi
+                List<Pokemon> cachedPokemon = controller.getCachedPokemon();
+                if (cachedPokemon != null && !cachedPokemon.isEmpty()) {
+                    for (Pokemon pokemon : cachedPokemon) {
+                        VBox pokemonCard = UI.createPokemonCard(pokemon);
+                        pokemonCard.setOnMouseClicked(e -> showPokemonDetails(pokemon));
+                        pokemonGrid.getChildren().add(pokemonCard);
+                    }
+                    // Se siamo vicini alla fine, carica altri
+                    if (scrollPane.getVvalue() > 0.8) {
+                        loadMorePokemon();
+                    }
+                } else {
+                    loadMorePokemon();
+                }
+            } else {
+                loadMorePokemon();
+            }
         }
     }
 
